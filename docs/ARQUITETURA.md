@@ -245,4 +245,6 @@ Atualizações futuras: `git fetch upstream && git merge upstream/main`.
 
 **Registro:** cada rodada (manual ou via rotina) deixa uma linha em `docs/MANUTENCAO.md` com data e resumo do que mudou — é essa data que a próxima checagem usa como referência.
 
+**Reconciliação com repositório complementar (se houver):** se o vault também alimenta, por dual-write, um repositório complementar de conhecimento compartilhado (ex.: uma base institucional de equipe/empresa, de dono coletivo), a mesma rodada também compara os nós equivalentes entre os dois e aponta divergência — sem essa checagem, uma atualização feita só de um lado nunca seria detectada, já que dual-write manual não tem sincronização automática. O repositório complementar pode ter seu próprio hook `SessionStart`, checando a mesma referência de data deste `docs/MANUTENCAO.md` por caminho relativo (ex. `../mind/docs/MANUTENCAO.md`), condicionado à existência local deste vault (se não existir, não dispara — cobre o caso de outra pessoa abrir aquele repositório sem ter este vault clonado). Os dois compartilham a mesma cadência sem precisar de dois logs separados.
+
 **Aprovação:** por padrão, uma vez confirmada a rodada em si, a otimização edita os nós diretamente e resume as mudanças ao final (não pede aprovação item a item) — commit continua sendo decisão manual, como qualquer mudança no vault (seção 7).

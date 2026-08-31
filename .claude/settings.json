@@ -9,7 +9,7 @@
           },
           {
             "type": "command",
-            "command": "LAST=$(grep -oE '^- [0-9]{4}-[0-9]{2}-[0-9]{2}' docs/MANUTENCAO.md 2>/dev/null | tail -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}'); if [ -n \"$LAST\" ]; then DAYS=$(( ( $(date +%s) - $(date -d \"$LAST\" +%s) ) / 86400 )); if [ \"$DAYS\" -ge 7 ]; then printf '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"A ultima rodada de otimizacao do Mind (docs/MANUTENCAO.md) foi ha '\"$DAYS\"' dias (>= 7). Pergunte ao usuario logo no inicio desta conversa se ele quer rodar uma nova rodada de otimizacao/reorganizacao do vault agora (criterios e mecanismo em docs/ARQUITETURA.md, secao 13). So prossiga se ele confirmar explicitamente — e quando confirmar, delegue o trabalho pesado pro subagente maintenance (Agent tool, subagent_type maintenance) em vez de ler tudo direto nesta conversa; so relaie o resumo que ele devolver.\"}}'; fi; fi"
+            "command": "LAST=$(grep -oE '^- [0-9]{4}-[0-9]{2}-[0-9]{2}' docs/MANUTENCAO.md 2>/dev/null | tail -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}'); if [ -n \"$LAST\" ]; then DAYS=$(( ( $(date +%s) - $(date -d \"$LAST\" +%s) ) / 86400 )); if [ \"$DAYS\" -ge 7 ]; then printf '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"A ultima rodada de manutencao do Mind (docs/MANUTENCAO.md) foi ha '\"$DAYS\"' dias (>= 7). Pergunte ao usuario logo no inicio desta conversa se ele quer rodar uma nova rodada de manutencao do vault agora (dedup/compactacao de historico + reconciliacao com vault complementar + propagacao de convencoes novas + checagem de versao do template via scripts/check-template-version.sh; criterios e mecanismo em docs/ARQUITETURA.md, secao 13). So prossiga se ele confirmar explicitamente — e quando confirmar, delegue o trabalho pesado pro subagente maintenance (Agent tool, subagent_type maintenance) em vez de ler tudo direto nesta conversa; so relaie o resumo que ele devolver.\"}}'; fi; fi"
           }
         ]
       }
@@ -27,6 +27,10 @@
       "Bash(git show *)",
       "Bash(chmod +x scripts/setup-symlinks.sh)",
       "Bash(scripts/setup-symlinks.sh)",
+      "Bash(bash scripts/check-template-version.sh)",
+      "Bash(scripts/check-template-version.sh)",
+      "Bash(git fetch upstream *)",
+      "Bash(git fetch upstream)",
       "Bash(git clone *)"
     ],
     "deny": [

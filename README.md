@@ -20,6 +20,8 @@ The full architecture (why each decision was made, what's still missing) is in [
 - **`claude-user/`**: the "warehouse" for **user-level** Skill, Subagents, and instructions — they work in any active project, not just this one. They live here (versioned in this repo) and get mirrored into `~/.claude/` via symlink (see below).
 - **`scripts/setup-symlinks.sh`**: recreates the `claude-user/` symlinks in `~/.claude/`.
 - **`scripts/status-all.sh`**: scans whatever project repos you list inside it and shows which ones have uncommitted changes or unpushed commits — to check everything at once instead of going folder by folder.
+- **`scripts/check-template-version.sh`**: reports whether your engineering base is behind this template (read-only).
+- **`VERSION` / `CHANGELOG.md`**: version number of the engineering base and what changed in each bump — used by the check above and by the maintenance round.
 
 ## Setup on a new machine
 
@@ -78,6 +80,8 @@ git merge upstream/main
 ```
 
 This usually merges without conflict because the architecture already separates "engineering" (`docs/`, `claude-user/`, `scripts/`, `.claude/`) — which only changes here, in the template — from personal content (your filled-in `MIND.md` and whatever node folders you create) — which the template never touches. The expected friction point is `.claude/settings.json`: it accumulates permissions granted as you use it, so if you and the template change that file at the same time you can get a merge conflict there — rare, and resolves by hand without mystery (small file). More details on this decision in [docs/ARQUITETURA.md](docs/ARQUITETURA.md), section 12.
+
+**Knowing when you're behind:** the engineering base has a version number in [`VERSION`](VERSION), and each bump is described in [`CHANGELOG.md`](CHANGELOG.md). The periodic maintenance round (section below) runs `scripts/check-template-version.sh`, which compares your local `VERSION` against the template's and tells you if you're behind — it only reports; the `git merge` above stays your call. The check needs no local copy of the template: it uses a sibling `../mind-template` if you keep one, otherwise `git fetch upstream`.
 
 ## How knowledge capture works
 

@@ -20,6 +20,8 @@ A arquitetura completa (por que cada decisão foi tomada, o que ainda falta) est
 - **`claude-user/`**: o "armazém" da Skill, Subagentes e instrução de **nível usuário** — funcionam em qualquer projeto ativo, não só neste. Ficam aqui (versionados neste repo) e são espelhados em `~/.claude/` via symlink (ver abaixo).
 - **`scripts/setup-symlinks.sh`**: recria os symlinks de `claude-user/` em `~/.claude/`.
 - **`scripts/status-all.sh`**: varre os repos de projeto que você listar dentro dele e mostra quais têm mudança não commitada ou commit não empurrado — pra checar tudo de uma vez em vez de entrar pasta por pasta.
+- **`scripts/check-template-version.sh`**: informa se a sua base de engenharia está atrás deste template (só leitura).
+- **`VERSION` / `CHANGELOG.md`**: número de versão da base de engenharia e o que mudou em cada bump — usados pela checagem acima e pela rodada de manutenção.
 
 ## Setup numa máquina nova
 
@@ -78,6 +80,8 @@ git merge upstream/main
 ```
 
 Isso costuma fundir sem conflito porque a arquitetura já separa o que é "engenharia" (`docs/`, `claude-user/`, `scripts/`, `.claude/`) — que só muda aqui, no template — do que é conteúdo pessoal (`MIND.md` preenchido e as pastas de nós que você for criando) — que o template nunca toca. O ponto de atrito esperado é `.claude/settings.json`: ele acumula permissões liberadas conforme o uso, então se você e o template mudarem esse arquivo ao mesmo tempo pode dar conflito de merge ali — raro, e resolve na mão sem mistério (arquivo pequeno). Mais detalhes da decisão em [docs/ARQUITETURA.md](docs/ARQUITETURA.md), seção 12.
+
+**Saber quando você está atrás:** a base de engenharia tem um número de versão em [`VERSION`](VERSION), e cada bump é descrito em [`CHANGELOG.md`](CHANGELOG.md). A rodada de manutenção periódica (seção abaixo) roda `scripts/check-template-version.sh`, que compara o seu `VERSION` local com o do template e avisa se você está atrás — só reporta, o `git merge` acima continua sendo decisão sua. A checagem não precisa de cópia local do template: usa um `../mind-template` irmão se você mantiver um, senão `git fetch upstream`.
 
 ## Como a captura de conhecimento funciona
 

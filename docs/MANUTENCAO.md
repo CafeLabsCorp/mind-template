@@ -4,9 +4,9 @@ criado: <preencher>
 atualizado: <preencher>
 ---
 
-# Manutenção — Otimização periódica do Mind
+# Manutenção periódica do Mind
 
-Log de execuções da rotina de otimização descrita em [ARQUITETURA.md](ARQUITETURA.md), seção 13. Não é nó de conhecimento — não segue a regra de tamanho/split da seção 5.
+Log de execuções da rotina de manutenção descrita em [ARQUITETURA.md](ARQUITETURA.md), seção 13 (antes chamada "otimização"). Não é nó de conhecimento — não segue a regra de tamanho/split da seção 5.
 
 ## Log
 

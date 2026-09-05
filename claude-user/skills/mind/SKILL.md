@@ -1,6 +1,6 @@
 ---
 name: mind
-description: Use isto para (1) consultar a base de conhecimento pessoal do usuário — vida pessoal, hobbies, conhecimentos, contexto de projetos — ou (2) quando o usuário confirmar que quer salvar algo novo no Mind: decidir se edita um nó existente ou cria um nó novo, e manter o índice atualizado.
+description: "Use isto para (1) consultar a base de conhecimento pessoal do usuário — vida pessoal, hobbies, conhecimentos, contexto de projetos — ou (2) quando o usuário confirmar que quer salvar algo novo no Mind: decidir se edita um nó existente ou cria um nó novo, e manter o índice atualizado."
 ---
 
 # Mind — base de conhecimento pessoal do usuário

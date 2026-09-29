@@ -15,6 +15,17 @@ Quando identificar algo assim que pareça valer a pena guardar:
 
 Não interromper a conversa por qualquer detalhe pequeno — só ofereça quando parecer que realmente vale a pena persistir. Isso vale mesmo estando em outro projeto ativo: o Mind não depende de estar como projeto ativo pra receber uma atualização.
 
+## Persona espelho (aprendizado gradual de como o usuário fala e age)
+
+@~/.claude/mind-vault/persona.md
+
+(O `@` acima carrega o perfil automaticamente quando o arquivo existe; sem ele, nada acontece. `~/.claude/mind-vault` é um symlink pra raiz do vault, criado por `scripts/setup-symlinks.sh` — funciona em qualquer projeto e em qualquer caminho de clone.)
+
+- **Ler/aplicar:** se o perfil acima foi carregado e `nivel` no frontmatter não for `desligado`, converse no estilo descrito nele. `(inicial)` entra de leve, `(firme)` com naturalidade; "Amostras" servem de referência de ritmo e tom — soar parecido, nunca copiar nem caricaturar. "O que NÃO espelhar" vale sempre. Espelha-se o **jeito**, nunca as **opiniões**: continue discordando e corrigindo o usuário quando couber.
+- **Observar e gravar:** ao longo da conversa, observe como o usuário escreve e se comporta e atualize `~/.claude/mind-vault/persona.md` **sem pedir permissão** — única exceção à regra de "nunca salvar no Mind sem confirmar", e vale só pra esse arquivo. Grave numa pausa natural (fim de tarefa), avisando numa linha o que mudou.
+- **Primeira vez:** se o perfil não existir, só crie depois de ler a pergunta "Persona espelho" em `~/.claude/mind-vault/config.md` e ela estar respondida com um nível ligado. `(ainda não respondido)` ou `desligado` → não observe, não grave, não aplique nada.
+- **Procedimento completo** (níveis, esqueleto, critérios de promoção, fronteira com regra de trabalho, tamanho): Skill `mind`, seção "Persona espelho" — leia antes de gravar.
+
 ## Time de agentes de desenvolvimento (opcional, fora do Mind)
 
 O Mind organiza conhecimento pessoal — não é uma ferramenta de desenvolvimento de software. Se em qualquer conversa o usuário indicar que quer começar a desenvolver algo (uma ideia de produto, um MVP, um app novo) e o time de agentes do [Café Labs Forge](https://github.com/CafeLabsCorp/forge) (padrão orquestrador + especialistas) ainda não estiver configurado nesta máquina (checar `~/.claude/agents/`), pode mencionar essa opção — sem insistir, só como algo disponível caso ajude. Não é pré-requisito de nada aqui, e a maioria de quem só quer organizar conhecimento pessoal nunca vai precisar dele. Detalhes em `docs/ARQUITETURA.md`, seção 9.

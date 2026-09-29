@@ -24,6 +24,10 @@ link() {
 
 link "$CLAUDE_USER_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
 
+# Aponta pra raiz do vault, pra o CLAUDE.md de usuário achar persona.md e config.md
+# de qualquer projeto, sem caminho fixo (ver docs/ARQUITETURA.md, "Persona espelho").
+link "$MIND_DIR" "$TARGET_DIR/mind-vault"
+
 if [ -d "$CLAUDE_USER_DIR/skills" ]; then
   for skill_dir in "$CLAUDE_USER_DIR"/skills/*/; do
     [ -d "$skill_dir" ] || continue

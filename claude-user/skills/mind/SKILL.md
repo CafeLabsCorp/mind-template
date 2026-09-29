@@ -1,6 +1,6 @@
 ---
 name: mind
-description: "Use isto para (1) consultar a base de conhecimento pessoal do usuário — vida pessoal, hobbies, conhecimentos, contexto de projetos — ou (2) quando o usuário confirmar que quer salvar algo novo no Mind: decidir se edita um nó existente ou cria um nó novo, e manter o índice atualizado."
+description: "Use isto para (1) consultar a base de conhecimento pessoal do usuário — vida pessoal, hobbies, conhecimentos, contexto de projetos — ou (2) quando o usuário confirmar que quer salvar algo novo no Mind: decidir se edita um nó existente ou cria um nó novo, e manter o índice atualizado; ou (3) gravar/atualizar a persona espelho (persona.md), o perfil de como o usuário fala e age."
 ---
 
 # Mind — base de conhecimento pessoal do usuário
@@ -53,6 +53,66 @@ Acionado pelo gatilho em `~/.claude/CLAUDE.md` quando o usuário já confirmou q
 11. Escreva pensando nas duas pontas de uso (ver princípio orientador na seção 1 do `ARQUITETURA.md`): nós concisos, bem fatiados, que funcionem tanto pra leitura num editor de Markdown quanto pra consulta sob demanda por voz, se houver essa integração. Evite parágrafos longos.
 12. **Nunca dar `git add`/`commit`** como parte da captura, nem mesmo ao reagrupar pastas — a skill só edita arquivos no working tree; commitar é sempre decisão manual do usuário, que vai querer revisar o diff antes.
 13. Depois de escrever (ou reorganizar), confirme numa frase o que foi salvo/movido, em qual arquivo, e se algum link cruzado foi adicionado ou corrigido.
+
+## Persona espelho (perfil de como o usuário fala e age)
+
+`persona.md` na raiz do vault: perfil construído **aos poucos** a partir das conversas reais, carregado em toda conversa (via `@` no `~/.claude/CLAUDE.md`, através do symlink `~/.claude/mind-vault`) pra o Claude conversar no estilo do usuário. Complementa `config.md` (que diz o básico — idioma, tom): o `persona.md` refina com o tempo. Decisão e racional em `docs/ARQUITETURA.md`, seção "Persona espelho".
+
+**Níveis** (resposta da pergunta "Persona espelho" em `config.md`, espelhada em `nivel:` no frontmatter do `persona.md`):
+- `desligado` — não lê, não observa, não grava.
+- `voz` — só registro, expressões e estrutura das mensagens.
+- `voz+comportamento` — também como o usuário decide, pede, corrige e reage a erro/risco.
+- `voz+comportamento+humor` — também o tipo de humor; só espelha piada quando o usuário puxou, nunca por conta própria.
+
+Se o usuário mudar o nível no `config.md`, atualize o `nivel:` do `persona.md` (se existir). Traços de um nível acima do atual não entram.
+
+**Esqueleto** (criado só no primeiro traço real — nunca pré-scaffold; o template não entrega `persona.md`):
+
+```markdown
+---
+tags: [config, persona]
+criado: AAAA-MM-DD
+atualizado: AAAA-MM-DD
+nivel: voz
+---
+
+# Persona — como o <nome do config.md> fala e se comporta
+
+Perfil construído aos poucos, observando as conversas, pra o Claude conversar do mesmo jeito que o usuário se comunica. Lido no início de toda conversa. Complementa [config.md](config.md). Pode editar à mão — o Claude respeita o que estiver aqui.
+
+**Confiança:** `(inicial)` = visto 1-2 vezes, aplicar de leve; `(firme)` = padrão repetido em conversas diferentes, aplicar com naturalidade.
+
+## Registro e tom
+
+## Estrutura das mensagens
+
+## Amostras
+_Mensagens reais curtas (5-10), sem dados de terceiros — referência de ritmo e tom, mais eficaz que descrição._
+
+## Comportamento e jeito de pensar
+_Só a partir do nível `voz+comportamento`._
+
+## O que NÃO espelhar
+
+- Erros de digitação e acentuação — espelhar o registro, não os erros.
+- Informalidade nunca custa precisão técnica, clareza ou honestidade; espelha-se o jeito, nunca as opiniões.
+- Texto que não é conversa (commits, docs, notas do vault, código) segue as convenções próprias dele, não a persona.
+```
+
+Cada traço é um bullet: descrição do padrão + exemplo literal curto entre aspas (quando houver) + `(inicial)`/`(firme)`.
+
+**Observar:** expressões recorrentes, abertura/fechamento de mensagem, jeito de pedir/corrigir/concordar/agradecer, estrutura (numeração, tamanho, emendar assuntos) e, a partir do nível `voz+comportamento`, padrões de comportamento (valida antes de liberar, separa análise de execução, trata CAPS como regra dura…). **Não vira traço:** fatos da vida do usuário (captura normal, com confirmação), humor momentâneo/emocional pontual, erros de digitação, dados de terceiros ou algo sensível nos exemplos.
+
+**Gravar:**
+1. Junte as observações e grave numa pausa natural, nunca no meio do trabalho. Nunca `git add`/`commit`.
+2. **Edite o bullet existente** quando o traço já estiver lá (promover, acrescentar exemplo) — nunca crie um segundo parecido. Faça `grep` pela expressão antes de adicionar.
+3. Traço novo → `(inicial)`. Reapareceu **em outra conversa** → `(firme)`. Usuário contrariou ou pediu pra mudar → ajustar/remover.
+4. Atualize `atualizado:` e avise numa linha curta (ex.: "Persona: +1 traço (agradece com 'valeu'), 'tipo' subiu pra firme.").
+5. Se o arquivo não existir, crie a partir do esqueleto, com o nome de "Como quer ser chamado" do `config.md` e `nivel:` igual à resposta.
+
+**Fronteira persona × regra de trabalho:** persona é *descritiva* (como o usuário se comunica/pensa; o Claude ajusta o *jeito* de responder). Regra de trabalho é *prescritiva* (obrigação/proibição cujo descumprimento gera dano ou retrabalho — "nunca commitar sem perguntar"). Na dúvida, ou se o padrão implicar uma obrigação: **não grave na persona** — ofereça como regra de trabalho, pelo fluxo normal de captura (com confirmação).
+
+**Tamanho:** lido em toda conversa, então meta de ~40-60 linhas. Se passar, **não aplique split em pasta** (a persona precisa ser lida inteira) — funda traços parecidos e compacte exemplos. A manutenção periódica cuida disso.
 
 ## Time de agentes de desenvolvimento (opcional, fora do Mind)
 

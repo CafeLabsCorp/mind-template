@@ -23,6 +23,10 @@ Follow `docs/ARQUITETURA.md`'s cut criteria exactly — completed items narratin
 
 If a complementary shared vault is configured (per the reconciliation extension), compare the equivalent nodes between the two and report divergence — you report it, you don't silently pick one side and overwrite the other. Divergence resolution is a judgment call for whoever reads your summary. This comparison also covers **decisions recorded in the task board** (`tarefas/` — e.g. a completed `[x]` item that captures a business/product decision) that haven't been propagated to the equivalent product/knowledge node in either vault: flag them so the decision record catches up with the board.
 
+## Mirror persona check
+
+If `persona.md` exists at the vault root, include it in scope **every round**, even if it didn't change since the last one — the problem there is accumulation, not recent edits. It is loaded in every conversation, so it must stay short (~40-60 lines). Per `docs/ARQUITETURA.md` ("Persona espelho"): merge near-duplicate traits (keep the fuller version with the higher confidence marker), compact examples, and check contradictions inside the file and against `config.md`. Never split it into a folder. Traits marked `(inicial)` that never reappeared for a long time: **report only, don't remove**. Never remove or rewrite something the user wrote by hand without reporting it (`git log -p` on the file helps tell who wrote what). Also, if the file still has the legacy home-made format (hardcoded `~/mind/persona.md` path in `claude-user/CLAUDE.md`, no `nivel:` in the frontmatter), follow the migration note in `CHANGELOG.md` v2.
+
 ## Template-version check
 
 Run `bash scripts/check-template-version.sh` once per round (it is read-only). Relay its output verbatim in your summary. If it reports the engine is behind, name the `CHANGELOG.md` entries between the two versions so the reader knows what they'd be pulling — but **do not** run `git merge`, edit engine files to match, or bump `VERSION` yourself. Applying a template update is a separate, deliberate step the user drives.

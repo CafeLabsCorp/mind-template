@@ -114,6 +114,8 @@ Cada traço é um bullet: descrição do padrão + exemplo literal curto entre a
 
 **Tamanho:** lido em toda conversa, então meta de ~40-60 linhas. Se passar, **não aplique split em pasta** (a persona precisa ser lida inteira) — funda traços parecidos e compacte exemplos. A manutenção periódica cuida disso.
 
+**Mineração de conversas antigas** (opt-in separado no `config.md`, ver `docs/ARQUITETURA.md`): feita na rodada de manutenção via `scripts/extract-user-messages.sh` (só mensagens do usuário, local). `minerado: AAAA-MM-DD` no frontmatter marca até quando já foi minerado. Ao receber "Amostras candidatas" do subagente, mostre-as ao usuário, pergunte quais manter e só então grave em `## Amostras` — literais nunca entram sem confirmação.
+
 ## Time de agentes de desenvolvimento (opcional, fora do Mind)
 
 Se o usuário mencionar que quer desenvolver algo (um MVP, um app, uma ideia de produto nova) e o time de agentes do [Café Labs Forge](https://github.com/CafeLabsCorp/forge) ainda não estiver configurado nesta máquina, pode mencionar essa opção — sem insistir, só como algo disponível. Não é parte do Mind (vive em repositório próprio, com seu próprio script de symlink pra `~/.claude/agents/`), então não interfere em nada do modo leitura/captura acima. Ver `docs/ARQUITETURA.md`, seção 9.

@@ -289,4 +289,10 @@ O repositório complementar não deve assumir um nome/caminho fixo pro vault pes
 
 **Custo:** desprezível. ~1k tokens de leitura por conversa (com cache); observação e gravação acontecem na própria conversa, sem chamadas extras.
 
-**Em aberto (fase 2):** uma **mineração em lote** dos transcripts antigos (`~/.claude/projects/`) durante a rodada de manutenção, pra achar padrões que a observação em conversa não pega. É a única parte com custo real de tokens, por isso seria um nível opcional, avisado no `config.md`. Traços `(inicial)` que nunca reaparecem: a manutenção só **reporta**, não remove.
+**Mineração de conversas antigas (opt-in separado):** a observação em conversa não pega padrões que só aparecem olhando muitas mensagens. Por isso a rodada de manutenção pode **minerar os transcripts locais** (`~/.claude/projects/`). É a única parte da persona com custo real de tokens (~20-30k por rodada, incremental via `minerado:` no frontmatter), então tem pergunta própria no `config.md`: `não` / `perguntar` (a rodada pergunta antes) / `automático`.
+- **Extração local antes do modelo:** `scripts/extract-user-messages.sh` tira dos transcripts só as mensagens **do usuário** (sem respostas do Claude, resultados de ferramenta, prompts de subagente, conteúdo colado/longo ou duplicado), capado nas ~300 mais recentes. O subagente `maintenance` nunca lê os transcripts crus.
+- **Só estilo e comportamento, nunca fatos:** vida do usuário e dados de terceiros não viram traço.
+- **Confirmação onde há risco:** traços novos entram com aviso de uma linha; mensagens literais pra `## Amostras` são só *propostas* no resumo da rodada e o usuário confirma quais ficam (podem conter nome de terceiro, chave ou URL privada).
+- **Nunca silenciosa sem consentimento:** só roda se o usuário respondeu `perguntar` (e disse sim na rodada) ou `automático`. Ler `~/.claude/projects/**` pode exigir uma regra de permissão do Claude Code, por ser dado sensível.
+
+Traços `(inicial)` que nunca reaparecem: a manutenção só **reporta**, não remove.

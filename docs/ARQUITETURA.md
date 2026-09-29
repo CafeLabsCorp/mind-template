@@ -59,7 +59,8 @@ mind/
 ├── docs/
 │   └── ARQUITETURA.md          (este arquivo)
 ├── MIND.md                     (índice raiz: só links + 1 linha de descrição cada, sem conteúdo pesado)
-├── config.md                   (configuração de funcionamento — idioma, como chamar o usuário, fuso, tom, papel; não é nó de conhecimento)
+├── config.md                   (configuração de funcionamento — idioma, como chamar o usuário, fuso, tom, papel, persona espelho; não é nó de conhecimento)
+├── persona.md                  (perfil de como o usuário fala e age — nasce no primeiro traço, nunca pré-criado; ver seção 14)
 ├── <categoria-1>/              (ex: vida-pessoal/, conhecimentos/, projetos/ — nomes livres)
 │   └── <categoria-1>.md
 ├── .claude/                    (Skills/Subagentes/settings de PROJETO — só valem com mind ativo)
@@ -239,7 +240,7 @@ Atualizações futuras: `git fetch upstream && git merge upstream/main`.
 
 **Mecanismo sugerido:** mesmo padrão já usado pra `config.md` (seção 4) — um hook `SessionStart` em `.claude/settings.json` (nível projeto, dispara quando o `mind` é o projeto ativo). A cada início de conversa, um comando local lê a última data registrada em `docs/MANUTENCAO.md` (log de execuções — não é nó de conhecimento, não segue o frontmatter da seção 5) e calcula há quantos dias ela foi. Se já passou o intervalo escolhido, injeta contexto instruindo o Claude a perguntar ao usuário, logo no início da conversa, se pode rodar uma nova rodada de manutenção — só executa se ele confirmar. Não depende de nuvem, GitHub conectado ou processo externo: roda como qualquer outro hook local do repo, e só é checado quando o vault de fato é aberto (mesma limitação já aceita pelo hook do `config.md`).
 
-**O que a rodada faz, uma vez confirmada:** (a) corte/reorganização de cruft acumulado (critérios abaixo); (b) reconciliação com repositório complementar, se houver; (c) propagação de convenções/funcionamentos novos do engine pros nós/pastas que ainda não têm; (d) `scripts/check-template-version.sh` pra avisar se o engine local está atrás do template (seção 12) — só reporta, nunca aplica o merge.
+**O que a rodada faz, uma vez confirmada:** (a) corte/reorganização de cruft acumulado (critérios abaixo); (b) reconciliação com repositório complementar, se houver; (c) propagação de convenções/funcionamentos novos do engine pros nós/pastas que ainda não têm; (d) `scripts/check-template-version.sh` pra avisar se o engine local está atrás do template (seção 12) — só reporta, nunca aplica o merge; (e) persona espelho, se existir (seção 14): deduplicar traços parecidos, checar tamanho (~40-60 linhas), contradições internas e com `config.md`, e só reportar traços `(inicial)` antigos que nunca reaparecem — nunca remover algo escrito à mão sem reportar.
 
 **Critérios de corte/reorganização, uma vez confirmada a rodada:**
 - Itens concluídos (`[x]`) cujo relato só documenta um evento pontual já resolvido, sem decisão/motivo que ainda importe daqui pra frente — compactar ou remover.
@@ -254,3 +255,38 @@ Atualizações futuras: `git fetch upstream && git merge upstream/main`.
 O repositório complementar não deve assumir um nome/caminho fixo pro vault pessoal de cada pessoa (nomes de pasta variam de máquina pra máquina) — o mecanismo robusto é um **marcador local por máquina, fora do git** (ex. `.claude/personal-vault.local`, no `.gitignore`), guardando o caminho do vault pessoal daquela pessoa ali, ou a palavra `none` se ela não tiver/não quiser um. Um hook `SessionStart` de onboarding, condicionado à ausência desse marcador, pergunta na primeira vez que alguém abre o repositório numa máquina: já tem um vault pessoal (e qual o caminho), quer que um seja configurado agora a partir de um template, ou não quer nenhum — e grava a resposta no marcador, sem repetir a pergunta depois. Um segundo hook `SessionStart`, condicionado à presença do marcador com um caminho válido, lê a data de `<caminho>/docs/MANUTENCAO.md` pra decidir se pergunta sobre reconciliar.
 
 **Aprovação:** por padrão, uma vez confirmada a rodada em si, a manutenção edita os nós diretamente e resume as mudanças ao final (não pede aprovação item a item) — commit continua sendo decisão manual, como qualquer mudança no vault (seção 7). A exceção é a checagem de versão do template: ela só reporta, aplicar o update é decisão à parte.
+
+---
+
+## 14. Persona espelho
+
+**Decisão:** o Claude mantém um perfil de **como o usuário fala e age** em `persona.md` (raiz do vault), lê esse perfil no início de toda conversa, em qualquer projeto, e o atualiza sozinho ao longo do uso. É opt-in, com níveis, escolhido numa pergunta do `config.md` (`desligado` / `voz` / `voz+comportamento` / `voz+comportamento+humor`).
+
+**Por que cabe no Mind:** é o princípio da seção 7 — informação durável sobre o usuário e sobre *como o Claude deve interagir com ele* não pode ficar presa num sistema de memória interno, não versionado e invisível. O perfil é versionado no vault, editável à mão e cada mudança aparece (aviso de uma linha + diff no git).
+
+| Peça | O que guarda | Quem escreve | Confirmação |
+|---|---|---|---|
+| `config.md` | Configuração fixa inicial (idioma, nome, fuso, tom, papel) | Claude, de resposta direta | Resposta explícita |
+| `claude-user/CLAUDE.md` → "Regras de trabalho" | O que o Claude deve fazer/evitar | Claude, via captura | Sempre pergunta antes |
+| Nós do vault | Fatos/conhecimento | Claude, via Skill `mind` | Sempre pergunta antes |
+| **`persona.md`** | **Como o usuário se comunica e age** | **Claude, sozinho** | **Não pergunta; avisa numa linha depois** |
+
+**Por que é a única exceção à confirmação:** pedir aprovação a cada traço observado atrapalharia a própria conversa que o perfil tenta melhorar. A exceção vale só pra `persona.md` (nem `config.md` nem nenhum nó), exige o opt-in explícito do `config.md`, e o usuário sempre enxerga e corrige (aviso, edição à mão, `git diff`). Nunca há `git add`/`commit` automático.
+
+**Mecanismo:**
+- `scripts/setup-symlinks.sh` cria `~/.claude/mind-vault` → raiz do vault (mesmo padrão dotfiles da seção 6). Isso resolve "onde está o vault?" a partir de qualquer projeto, sem caminho fixo — o `CLAUDE.md` de usuário não sabia onde o vault mora.
+- `claude-user/CLAUDE.md` importa `@~/.claude/mind-vault/persona.md`. Aqui o `@import` é o certo — o oposto do índice descartado na seção 2: a persona **precisa** estar sempre carregada e é curta; o índice não precisa e é grande. O harness garante o carregamento, sem depender do modelo "lembrar" de ler. Arquivo inexistente é ignorado silenciosamente (testado) — o arquivo só nasce no primeiro traço real (regra de crescimento orgânico, seção 4), e o template nunca entrega um `persona.md` (conteúdo pessoal → sem conflito de merge).
+- O procedimento detalhado (esqueleto, níveis, critérios de promoção, fronteira com regra de trabalho) mora na Skill `mind`; o gatilho curto, no `CLAUDE.md` de usuário — mesmo desenho em duas camadas da seção 7.
+- Um hook `SessionStart` avisa pra rodar `scripts/setup-symlinks.sh` quando `~/.claude/mind-vault` ainda não existe (caso de quem atualizou o engine sem rodar o setup).
+
+**Forma do perfil:** traços curtos com marcador de confiança — `(inicial)` (visto 1-2 vezes, aplicar de leve) e `(firme)` (reapareceu em outra conversa, aplicar com naturalidade). Além dos bullets há uma seção **Amostras** com mensagens reais curtas: exemplos literais transmitem ritmo e tom muito melhor que descrição. A seção "O que NÃO espelhar" (erros de digitação, precisão/honestidade acima de informalidade, commits/docs/código fora da persona) vale sempre.
+
+**Espelhar o jeito, não as opiniões:** o perfil nunca pode virar bajulação — o Claude continua discordando e corrigindo o usuário quando cabe.
+
+**Fronteira persona × regra de trabalho:** persona é *descritiva* (ajusta o *jeito* de responder); regra de trabalho é *prescritiva* (obrigação cujo descumprimento gera dano ou retrabalho). Na dúvida, oferece como regra de trabalho, pelo fluxo normal de captura (com confirmação).
+
+**Tamanho e split:** lido em toda conversa, então meta de ~40-60 linhas. A regra de split da seção 5 **não** se aplica (o perfil precisa ser lido inteiro) — em vez disso funde-se traços parecidos e compacta-se exemplos, na manutenção periódica.
+
+**Custo:** desprezível. ~1k tokens de leitura por conversa (com cache); observação e gravação acontecem na própria conversa, sem chamadas extras.
+
+**Em aberto (fase 2):** uma **mineração em lote** dos transcripts antigos (`~/.claude/projects/`) durante a rodada de manutenção, pra achar padrões que a observação em conversa não pega. É a única parte com custo real de tokens, por isso seria um nível opcional, avisado no `config.md`. Traços `(inicial)` que nunca reaparecem: a manutenção só **reporta**, não remove.

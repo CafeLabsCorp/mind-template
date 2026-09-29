@@ -51,6 +51,12 @@ Quer que o Claude aprenda aos poucos como você fala e age, e passe a conversar 
 
 **Resposta:** (ainda não respondido)
 
+## Mineração de conversas antigas (persona espelho)
+
+Quer que a rodada de manutenção também analise suas conversas antigas com o Claude — só as **suas** mensagens, extraídas localmente por `scripts/extract-user-messages.sh` — pra achar traços de estilo e comportamento que a observação ao vivo não pegou? **Custo:** é a única parte da persona que gasta tokens de verdade, ~20–30k por rodada (a primeira um pouco mais; depois só o que é novo). Traços novos entram com aviso de uma linha; **mensagens literais pra "Amostras" sempre pedem a sua confirmação antes** (podem ter nome de terceiro ou dado privado). Só vale se a persona acima não estiver `desligado`. Opções: **não** / **perguntar** (a rodada pergunta antes de minerar) / **automático** (minera em toda rodada).
+
+**Resposta:** (ainda não respondido)
+
 ## Ver também
 
 - [MIND.md](MIND.md)

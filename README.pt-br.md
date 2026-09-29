@@ -16,6 +16,7 @@ A arquitetura completa (por que cada decisão foi tomada, o que ainda falta) est
 ## O que tem aqui
 
 - **`MIND.md`**: índice raiz, começa vazio. Não existe uma árvore de pastas fixa pré-criada — os nós (e as pastas que fizerem sentido pra organizá-los) vão nascendo aos poucos, conforme as conversas.
+- **`persona.md`** (criado sob demanda, nunca vem pronto): uma "persona espelho" opcional — um perfil de como você fala e age, construído aos poucos pelo Claude a partir das suas conversas reais pra ele responder no seu estilo. Opt-in, com níveis (desligado / voz / voz+comportamento / +humor), escolhidos no `config.md`. É conteúdo pessoal: vive no seu repo privado. Ver [docs/ARQUITETURA.md](docs/ARQUITETURA.md), seção 14.
 - **`.claude/`**: Skill e permissões que só valem quando este projeto está ativo.
 - **`claude-user/`**: o "armazém" da Skill, Subagentes e instrução de **nível usuário** — funcionam em qualquer projeto ativo, não só neste. Ficam aqui (versionados neste repo) e são espelhados em `~/.claude/` via symlink (ver abaixo).
 - **`scripts/setup-symlinks.sh`**: recria os symlinks de `claude-user/` em `~/.claude/`.

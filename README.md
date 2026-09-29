@@ -16,6 +16,7 @@ The full architecture (why each decision was made, what's still missing) is in [
 ## What's in here
 
 - **`MIND.md`**: root index, starts empty. There's no fixed pre-built folder tree — nodes (and whatever folders make sense to organize them) get created gradually, as conversations happen.
+- **`persona.md`** (created on demand, never shipped): an optional "mirror persona" — a profile of how you talk and act, built gradually by Claude from your real conversations so it answers in your own style. Opt-in, with levels (off / voice / voice+behavior / +humor), chosen in `config.md`. It's personal content: it lives in your private repo. See [docs/ARQUITETURA.md](docs/ARQUITETURA.md), section 14.
 - **`.claude/`**: Skill and permissions that only apply while this project is active.
 - **`claude-user/`**: the "warehouse" for **user-level** Skill, Subagents, and instructions — they work in any active project, not just this one. They live here (versioned in this repo) and get mirrored into `~/.claude/` via symlink (see below).
 - **`scripts/setup-symlinks.sh`**: recreates the `claude-user/` symlinks in `~/.claude/`.

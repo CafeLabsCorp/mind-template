@@ -40,6 +40,17 @@ O que a pessoa faz — bootstrap rápido pra calibrar explicações técnicas de
 
 **Resposta:** (ainda não respondido)
 
+## Persona espelho
+
+Quer que o Claude aprenda aos poucos como você fala e age, e passe a conversar no mesmo estilo? Ele grava o perfil em `persona.md` sem pedir permissão a cada mudança (só avisa numa linha), e você pode editar o arquivo à mão ou mudar esta resposta quando quiser. **Custo:** praticamente nenhum — o arquivo é curto (~1k tokens por conversa, com cache) e o aprendizado acontece dentro da própria conversa, sem chamadas extras. Níveis:
+
+- **desligado** — não aprende nada.
+- **voz** — só o jeito de falar (registro, expressões, estrutura das mensagens).
+- **voz+comportamento** — também como você decide, pede, corrige e reage a erro/risco.
+- **voz+comportamento+humor** — também o tipo de humor; só espelha piada quando você puxa.
+
+**Resposta:** (ainda não respondido)
+
 ## Ver também
 
 - [MIND.md](MIND.md)

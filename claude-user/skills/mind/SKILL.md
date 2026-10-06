@@ -114,7 +114,7 @@ Cada traço é um bullet: descrição do padrão + exemplo literal curto entre a
 
 **Tamanho:** lido em toda conversa, então meta de ~40-60 linhas. Se passar, **não aplique split em pasta** (a persona precisa ser lida inteira) — funda traços parecidos e compacte exemplos. A manutenção periódica cuida disso.
 
-**Mineração de conversas antigas** (opt-in separado no `config.md`, ver `docs/ARQUITETURA.md`): feita na rodada de manutenção via `scripts/extract-user-messages.sh` (só mensagens do usuário, local). `minerado: AAAA-MM-DD` no frontmatter marca até quando já foi minerado. Ao receber "Amostras candidatas" do subagente, mostre-as ao usuário, pergunte quais manter e só então grave em `## Amostras` — literais nunca entram sem confirmação.
+**Mineração de conversas antigas** (opt-in separado no `config.md`, ver `docs/ARQUITETURA.md`): **ao gravar a resposta `perguntar` ou `automático`, confira se `.claude/settings.json` tem `Bash(scripts/extract-user-messages.sh)` e `Bash(scripts/extract-user-messages.sh *)` em `permissions.allow` e adicione o que faltar (avisando numa linha) — sem isso o classificador de permissões bloqueia o script na primeira rodada.** feita na rodada de manutenção via `scripts/extract-user-messages.sh` (só mensagens do usuário, local). `minerado: AAAA-MM-DD` no frontmatter marca até quando já foi minerado. Ao receber "Amostras candidatas" do subagente, mostre-as ao usuário, pergunte quais manter e só então grave em `## Amostras` — literais nunca entram sem confirmação.
 
 ## Time de agentes de desenvolvimento (opcional, fora do Mind)
 

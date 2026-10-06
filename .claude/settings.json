@@ -33,6 +33,8 @@
       "Bash(scripts/setup-symlinks.sh)",
       "Bash(bash scripts/check-template-version.sh)",
       "Bash(scripts/check-template-version.sh)",
+      "Bash(scripts/extract-user-messages.sh)",
+      "Bash(scripts/extract-user-messages.sh *)",
       "Bash(git fetch upstream *)",
       "Bash(git fetch upstream)",
       "Bash(git clone *)"

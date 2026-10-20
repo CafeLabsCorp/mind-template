@@ -35,6 +35,8 @@ Only if the calling prompt says the user approved mining for this round (the cal
 
 Run `bash scripts/check-template-version.sh` once per round (it is read-only). Relay its output verbatim in your summary. If it reports the engine is behind, name the `CHANGELOG.md` entries between the two versions so the reader knows what they'd be pulling — but **do not** run `git merge`, edit engine files to match, or bump `VERSION` yourself. Applying a template update is a separate, deliberate step the user drives.
 
+Run `bash scripts/check-orfaos.sh` once per round (read-only). For each file it lists (a file no `.md` links), add a link with a one-line description in the folder's own index (`README.md` or the category node), or in `MIND.md` for engine pieces; group repetitive series instead of one line per file. If a file is clearly junk (empty, accidental, duplicate), list it in your summary for deletion instead of linking it. Report what you linked.
+
 ## Finishing a round
 
 1. Make the edits directly (per `docs/ARQUITETURA.md`'s "Aprovação" — no per-item approval needed once the round itself was confirmed), bumping each touched node's `atualizado` frontmatter date to today.

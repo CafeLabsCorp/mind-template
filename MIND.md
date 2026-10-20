@@ -9,3 +9,10 @@ Configuração inicial de funcionamento (idioma, como chamar o usuário, fuso ho
 ## Nós
 
 _Nenhum nó ainda — os primeiros surgem conforme você usa o Mind._
+
+## Engine — como o próprio Mind funciona
+
+- [README](README.md) — apresentação do projeto · [Changelog](CHANGELOG.md) — versões do engine.
+- [Arquitetura](docs/ARQUITETURA.md) — como o Mind funciona e por quê · [Manutenção](docs/MANUTENCAO.md) — registro das rodadas periódicas.
+- [CLAUDE.md global](claude-user/CLAUDE.md) — regras de trabalho e de captura · [Skill `mind`](claude-user/skills/mind/SKILL.md) — como ler e escrever no vault · [Agente `maintenance`](claude-user/agents/maintenance.md) — roda a manutenção periódica.
+- [Scripts](scripts/README.md) — utilitários locais.

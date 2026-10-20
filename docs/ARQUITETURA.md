@@ -109,6 +109,8 @@ Tags livres, mas reaproveitando as que já existirem em nós parecidos em vez de
 
 ---
 
+**Regra: nada solto.** Todo arquivo que o MindView enxerga (tudo fora de pastas ocultas) precisa ser linkado por pelo menos um `.md`, com uma frase do que é — nó de conhecimento, PDF, imagem, script, tudo. O link vem do índice da própria pasta (`README.md` ou o nó da categoria), e o `MIND.md` liga as peças do engine. Série repetitiva (15 poses, 16 blocos de uma LP) pode ser explicada em grupo, linkando os arquivos embaixo. Motivo: navegação mais barata e mais clara, pra mim e pro Claude — um índice com uma frase por arquivo evita listar pasta e abrir arquivo só pra descobrir o que ele é — e um grafo sem pontos soltos. `scripts/check-orfaos.sh` lista o que sobrou; a rodada de manutenção (seção 11) roda e corrige.
+
 ## 6. Armazém único: Skills/Subagentes de usuário moram dentro do vault
 
 **Decisão:** Skills, Subagentes e o `CLAUDE.md` de nível usuário não ficam só em `~/.claude/` — o conteúdo real mora dentro do próprio vault (`mind/claude-user/`, espelhando a estrutura de `~/.claude/`), e `~/.claude/` aponta pra lá via **symlink**.
@@ -237,6 +239,8 @@ Atualizações futuras: `git fetch upstream && git merge upstream/main`.
 ## 13. Manutenção periódica do vault
 
 **Decisão:** anotações acumulam histórico redundante com o tempo — tarefa concluída sem lição durável, fato duplicado entre nós, detalhe operacional que só importava no momento em que foi feito. Por isso vale ter uma rotina de manutenção periódica (cadência sugerida: semanal) que **sempre pergunta antes de rodar** — nunca edita o vault por conta própria sem confirmação da rodada. (Antes chamada "otimização"; renomeada porque a rodada faz mais que compactar.)
+
+A rodada é executada pelo subagente [`maintenance`](../claude-user/agents/maintenance.md), que também roda `scripts/check-orfaos.sh` (ver [scripts](../scripts/README.md)) e liga ao grafo o que estiver solto, conforme a regra "nada solto" da seção 5.
 
 **Mecanismo sugerido:** mesmo padrão já usado pra `config.md` (seção 4) — um hook `SessionStart` em `.claude/settings.json` (nível projeto, dispara quando o `mind` é o projeto ativo). A cada início de conversa, um comando local lê a última data registrada em `docs/MANUTENCAO.md` (log de execuções — não é nó de conhecimento, não segue o frontmatter da seção 5) e calcula há quantos dias ela foi. Se já passou o intervalo escolhido, injeta contexto instruindo o Claude a perguntar ao usuário, logo no início da conversa, se pode rodar uma nova rodada de manutenção — só executa se ele confirmar. Não depende de nuvem, GitHub conectado ou processo externo: roda como qualquer outro hook local do repo, e só é checado quando o vault de fato é aberto (mesma limitação já aceita pelo hook do `config.md`).
 

@@ -16,6 +16,7 @@ O vault vive na raiz deste repositório. Índice raiz: `MIND.md` (só links + 1 
 1. Leia `MIND.md`.
 2. Identifique o(s) nó(s) relevante(s) pra pergunta feita.
 3. Leia só esses arquivos — nunca a árvore inteira.
+   **Se o assunto não aparece como título no índice** (um nome de pessoa, bot, projeto, termo solto) **ou antes de dizer que não há informação**, rode `scripts/buscar.sh <termo>` (vault inteiro, conteúdo e nome de arquivo, sem custo; devolve só os arquivos que mais citam, com uma linha de contexto). O índice só mostra o que virou título; um nome citado de passagem numa linha ou num arquivo de trabalho só se acha assim. Nunca responda "não tenho essa informação" sem essa busca.
 4. Ao ler qualquer índice (o `MIND.md` raiz ou o índice de uma subpasta), aplique também a **regra de reagrupamento** abaixo — é uma checagem barata, o índice já foi lido de qualquer forma pra achar o nó certo.
 
 ## Modo captura (escrita — só depois de confirmação do usuário)

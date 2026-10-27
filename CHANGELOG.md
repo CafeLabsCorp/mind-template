@@ -4,6 +4,20 @@ Versão da **base de engenharia** — Skill, `claude-user/`, `docs/ARQUITETURA.m
 
 A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) compara o `VERSION` local com o do `mind-template` e avisa quando você está atrás — ela nunca aplica update sozinha, só aponta e te ajuda a aplicar (`git merge upstream/main` se você usa o fluxo de dois remotes, ou à mão).
 
+## v3 — 2026-10-27
+
+**O Mind guarda conhecimento; produção vira repo próprio.** Regras novas em `docs/ARQUITETURA.md`, seção 5:
+
+- **Conhecimento vs. projeto:** o que tem build/dependência, entregável iterado em versões, assets de produção pesados ou código que outra pessoa rodaria vai pra um repositório próprio **ao lado** do vault (nunca aninhado, nem submodule). No Mind fica um nó-ponte (contexto, decisões, lições, estado, link, `Depende de`/`Consumido por`), então o grafo continua inteiro.
+- **Tabela de destino por tipo de arquivo** (`.md` de conhecimento, código-fonte, render, documento pessoal, prompts de geração…).
+- **`README.md` de pasta é índice, não diário.**
+- **Board enxuto:** a manutenção tira de `tarefas/` os `[x]` com mais de ~14 dias; se o item registrava uma decisão, ela vira linha em `## Decisões` do nó do produto antes.
+- **[`scripts/check-tamanho.sh`](scripts/check-tamanho.sh)** lista os nós acima do limite de split; a manutenção roda e **propõe** o split.
+- **Manutenção cobre o vault inteiro toda rodada:** [`scripts/check-vault.sh`](scripts/check-vault.sh) varre o repo todo em ~1 s (projeto dentro do vault, binário versionado ou pesado, arquivos idênticos, parágrafos repetidos, boards, READMEs-diário, tamanho, órfãos); o agente lê a fundo o que mudou mais o que a varredura apontou, e o vault inteiro quando o `VERSION` muda ou você pede.
+- A **Skill `mind`** passa a só resumir as regras de nó (split, reagrupamento, links, tarefas) e apontar pra seção 5 do `ARQUITETURA.md`, que vira a fonte única.
+
+**Nota de migração:** puxar o update só traz as regras; quem reorganiza é a **próxima rodada de manutenção**, que, por ser a primeira depois de mudar o `VERSION`, lê o vault inteiro: limpa os `[x]` antigos do board, deduplica, e propõe o que vira repo próprio, o que vai pro Drive e o que precisa de split, com o destino de cada item. Mover algo pra um repo próprio sempre espera o seu sim. Pra fazer de uma vez, peça "analisa meu vault com as regras da v3 e me propõe o que vira repo".
+
 ## v2 — 2026-09-29
 
 **Persona espelho**: opt-in (com níveis) pra o Claude aprender aos poucos como o usuário fala e age, e conversar no mesmo estilo. Racional e mecanismo em `docs/ARQUITETURA.md` (seção "Persona espelho").

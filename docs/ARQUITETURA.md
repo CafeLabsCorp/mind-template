@@ -95,7 +95,7 @@ atualizado: AAAA-MM-DD
 
 Tags livres, mas reaproveitando as que já existirem em nós parecidos em vez de inventar sinônimo novo.
 
-**Regra de tamanho/split (de cima pra baixo):** se um nó passar de ~120-150 linhas ou claramente virar dois assuntos distintos, ele vira uma pasta com índice próprio no mesmo padrão do `MIND.md` (ex.: `tema/tema.md` vira o índice, e os subtópicos viram `tema/subtopico-a.md`). Mantém os nós curtos o bastante pra funcionar bem também por voz, se essa integração existir.
+**Regra de tamanho/split (de cima pra baixo):** se um nó passar de ~120-150 linhas ou claramente virar dois assuntos distintos, ele vira uma pasta com índice próprio no mesmo padrão do `MIND.md` (ex.: `tema/tema.md` vira o índice, e os subtópicos viram `tema/subtopico-a.md`). Mantém os nós curtos o bastante pra funcionar bem também por voz, se essa integração existir. `scripts/check-tamanho.sh` lista os nós acima do limite; a rodada de manutenção (seção 11) roda e propõe o split (não executa sozinha: split é reorganização, segue a regra de reagrupamento abaixo).
 
 **Regra de reagrupamento (de baixo pra cima):** ao ler o índice de um nível (raiz ou subpasta), se dois ou mais nós/pastas daquele nível compartilharem um tema mais amplo, ou se aquele nível acumulou muitas entradas soltas sem estrutura (regra de bolso: ~6-8+), é sinal de que falta uma pasta intermediária nova. Nunca mover/reorganizar arquivos sem confirmação — sempre propor primeiro (quais nós agrupar, sob que nome, por quê) e só executar depois de aprovado, corrigindo os links relativos afetados.
 
@@ -110,6 +110,30 @@ Tags livres, mas reaproveitando as que já existirem em nós parecidos em vez de
 ---
 
 **Regra: nada solto.** Todo arquivo que o MindView enxerga (tudo fora de pastas ocultas) precisa ser linkado por pelo menos um `.md`, com uma frase do que é — nó de conhecimento, PDF, imagem, script, tudo. O link vem do índice da própria pasta (`README.md` ou o nó da categoria), e o `MIND.md` liga as peças do engine. Série repetitiva (15 poses, 16 blocos de uma LP) pode ser explicada em grupo, linkando os arquivos embaixo. Motivo: navegação mais barata e mais clara, pra mim e pro Claude — um índice com uma frase por arquivo evita listar pasta e abrir arquivo só pra descobrir o que ele é — e um grafo sem pontos soltos. `scripts/check-orfaos.sh` lista o que sobrou; a rodada de manutenção (seção 11) roda e corrige.
+
+**Regra: conhecimento vs. projeto.** O Mind guarda conhecimento — o quê, o porquê, decisões, lições, status. Produção mora fora. Algo vira **repositório próprio, ao lado do vault** (ex.: `~/projetos/<nome>`), quando tem pelo menos um destes:
+- build ou dependência (`package.json`, script de render, `node_modules`);
+- entregável que vai sendo iterado em versões (posts, landing pages, PDFs gerados, vídeos);
+- assets de produção pesados (renders, imagens geradas, fundos, fontes);
+- código que outra pessoa ou máquina precisaria rodar.
+
+No Mind fica um **nó-ponte**: o que é, contexto, decisões, lições que valem pra outros casos, estado atual, link pro repo e `Depende de`/`Consumido por`. O grafo continua inteiro, porque o projeto aparece como nó; só o material bruto sai. Nunca repo aninhado dentro do vault (nem submodule) — o repo fica ao lado, igual aos outros projetos. Motivo: sem esse critério, material de produção (artes de trabalho, HTML-fonte, projetos com build) vai entrando no vault e afoga o conhecimento.
+
+**Destino por tipo de arquivo:**
+
+| Tipo | Destino |
+|---|---|
+| `.md` de conhecimento, decisão, lição | Mind |
+| Código-fonte, HTML-fonte, scripts de build | Repo do projeto |
+| Imagem, vídeo, fonte, render de projeto | Disco do repo do projeto + nuvem (nunca GitHub) |
+| Referência visual pessoal (foto, identidade que não é de um projeto) | Disco do Mind + nuvem |
+| Documento pessoal (contrato, currículo, documento) | Disco do Mind + nuvem, nunca GitHub |
+| Prompts de geração (imagem, vídeo) | Junto do projeto; só a lição reaproveitável sobe pro Mind |
+| Ferramenta pequena do próprio vault (scripts de `scripts/`) | Mind |
+
+Binário segue sempre a regra de binários do `claude-user/CLAUDE.md`, esteja no Mind ou no repo do projeto.
+
+**Regra: `README.md` de pasta é índice, não diário.** Uma frase por arquivo (ou por série), dizendo o que é. Lições, decisões, prompts e histórico de versões vão pro nó de contexto (ou pro repo do projeto, se forem de produção). Motivo: README que vira diário de produção é o arquivo mais pesado da pasta e o primeiro que se lê.
 
 ## 6. Armazém único: Skills/Subagentes de usuário moram dentro do vault
 
@@ -240,14 +264,22 @@ Atualizações futuras: `git fetch upstream && git merge upstream/main`.
 
 **Decisão:** anotações acumulam histórico redundante com o tempo — tarefa concluída sem lição durável, fato duplicado entre nós, detalhe operacional que só importava no momento em que foi feito. Por isso vale ter uma rotina de manutenção periódica (cadência sugerida: semanal) que **sempre pergunta antes de rodar** — nunca edita o vault por conta própria sem confirmação da rodada. (Antes chamada "otimização"; renomeada porque a rodada faz mais que compactar.)
 
-A rodada é executada pelo subagente [`maintenance`](../claude-user/agents/maintenance.md), que também roda `scripts/check-orfaos.sh` (ver [scripts](../scripts/README.md)) e liga ao grafo o que estiver solto, conforme a regra "nada solto" da seção 5.
+A rodada é executada pelo subagente [`maintenance`](../claude-user/agents/maintenance.md), que também roda `scripts/check-orfaos.sh` (ver [scripts](../scripts/README.md)) e liga ao grafo o que estiver solto, conforme a regra "nada solto" da seção 5; roda `scripts/check-tamanho.sh` e propõe o split dos nós grandes; e aponta material de produção que entrou no vault, pela regra "conhecimento vs. projeto" da seção 5 (só aponta, não move).
+
+**Cobertura: o vault inteiro, toda rodada.** A rodada é em duas camadas, pra ser minuciosa sem ler o acervo inteiro toda semana:
+1. **Varredura completa por script**, sempre, no repo todo: [`scripts/check-vault.sh`](../scripts/check-vault.sh) lista projetos dentro do vault (build, `node_modules`, muito código), binários versionados ou pesados por pasta (candidatos ao Drive), arquivos idênticos, parágrafos repetidos entre nós, boards com `[x]` acumulado, READMEs que viraram diário, nós acima do limite e órfãos. Leva ~1 s e não gasta token além da saída.
+2. **Leitura a fundo** dos arquivos alterados desde a última rodada **mais** tudo que a varredura apontou. Duplicação "de sentido" (mesmo fato com outras palavras) só aparece aqui.
+3. **Leitura completa do vault** quando o `VERSION` do engine mudou desde a última rodada (regra nova precisa ser aplicada ao acervo antigo, não só ao que mudou) ou quando o usuário pedir ("manutenção completa").
+
+O que só reorganiza sem mover (limpar `[x]`, compactar, deduplicar, linkar órfão) a rodada faz direto. O que move arquivo (virar repo próprio, sair pro Drive, split, `git rm --cached` de binário versionado) vira **proposta com o destino de cada item**, e só é executado depois do sim.
 
 **Mecanismo sugerido:** mesmo padrão já usado pra `config.md` (seção 4) — um hook `SessionStart` em `.claude/settings.json` (nível projeto, dispara quando o `mind` é o projeto ativo). A cada início de conversa, um comando local lê a última data registrada em `docs/MANUTENCAO.md` (log de execuções — não é nó de conhecimento, não segue o frontmatter da seção 5) e calcula há quantos dias ela foi. Se já passou o intervalo escolhido, injeta contexto instruindo o Claude a perguntar ao usuário, logo no início da conversa, se pode rodar uma nova rodada de manutenção — só executa se ele confirmar. Não depende de nuvem, GitHub conectado ou processo externo: roda como qualquer outro hook local do repo, e só é checado quando o vault de fato é aberto (mesma limitação já aceita pelo hook do `config.md`).
 
 **O que a rodada faz, uma vez confirmada:** (a) corte/reorganização de cruft acumulado (critérios abaixo); (b) reconciliação com repositório complementar, se houver; (c) propagação de convenções/funcionamentos novos do engine pros nós/pastas que ainda não têm; (d) `scripts/check-template-version.sh` pra avisar se o engine local está atrás do template (seção 12) — só reporta, nunca aplica o merge; (e) persona espelho, se existir (seção 14): deduplicar traços parecidos, checar tamanho (~40-60 linhas), contradições internas e com `config.md`, e só reportar traços `(inicial)` antigos que nunca reaparecem — nunca remover algo escrito à mão sem reportar.
 
 **Critérios de corte/reorganização, uma vez confirmada a rodada:**
-- Itens concluídos (`[x]`) cujo relato só documenta um evento pontual já resolvido, sem decisão/motivo que ainda importe daqui pra frente — compactar ou remover.
+- **Board enxuto:** item concluído (`[x]`) em `tarefas/` há mais de ~14 dias (pela data no próprio item, ou `git log`/`blame` se não tiver) sai do board. Se ele registra uma decisão ou motivo que ainda importa, essa decisão vira uma linha em `## Decisões` (ou `## Estado atual`) do nó do produto/projeto antes; se não, só apaga — o git guarda o histórico. Sem seção `## Histórico` no board. Motivo: board com centenas de `[x]` faz cada leitura pagar pelo passado.
+- Itens concluídos fora de `tarefas/` cujo relato só documenta um evento pontual já resolvido, sem decisão/motivo que ainda importe daqui pra frente — compactar ou remover.
 - Informação duplicada entre dois ou mais nós — manter só a fonte principal, os demais passam a referenciar por link (mesmo princípio de não duplicar da seção 3).
 - Detalhe operacional excessivo (sequência exata de comandos, passo a passo de como algo foi feito) quando só o resultado/decisão interessa daqui pra frente.
 - **Nunca remove:** itens de tarefa ainda abertos (`tarefas/`), decisões com racional ainda referenciado por outro nó, ou qualquer conteúdo fora desses três critérios.

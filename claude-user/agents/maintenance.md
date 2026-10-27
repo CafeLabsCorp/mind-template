@@ -13,9 +13,14 @@ You are only ever invoked after the user already confirmed, in the calling conve
 
 Don't reread the whole vault from scratch — that defeats the purpose of running you as a separate agent (protecting the caller's context window) and most nodes reviewed in a prior round won't have accumulated new cruft.
 
-1. Read `docs/MANUTENCAO.md` to find the date of the last round.
-2. Run `git log --since="<that date>" --name-only --pretty=format:"---%h %ad %s" --date=short -- .` (excluding `.obsidian` and any complementary-vault working directory) to list every file touched since then. That's your review scope — plus whatever complementary repository the reconciliation extension points you to, if one is configured (check `claude-user/CLAUDE.md`'s "Regras pessoais" for a dual-write rule naming it, and `docs/ARQUITETURA.md`'s reconciliation paragraph for the mechanism).
-3. Read only those files in full before deciding what, if anything, needs cutting.
+The round always covers the **whole vault**, in layers (spec in `docs/ARQUITETURA.md` section 11, "Cobertura"):
+
+1. Run `bash scripts/check-vault.sh` first. It sweeps the entire repo in about a second (projects inside the vault, binaries tracked by git or heavy per folder, identical files, repeated paragraphs across nodes, task boards, diary-like READMEs, oversized nodes, orphans). Its output is your map of where to look.
+2. Read `docs/MANUTENCAO.md` to find the date of the last round, then run `git log --since="<that date>" --name-only --pretty=format:"---%h %ad %s" --date=short -- .` (excluding `.obsidian` and any complementary-vault working directory) to list every file touched since then.
+3. Deep-read scope = files touched since the last round **plus** every file the sweep flagged — plus whatever complementary repository the reconciliation extension points you to, if one is configured (check `claude-user/CLAUDE.md` for a dual-write rule naming it, and `docs/ARQUITETURA.md`'s reconciliation paragraph for the mechanism).
+4. **Full read of every node** instead, if `VERSION` changed since the last round (`git log --since="<that date>" -- VERSION` is non-empty — new rules must reach the old content too) or if the calling prompt says the user asked for a full round.
+
+Within that scope, read files in full before deciding what, if anything, needs cutting.
 
 ## Applying the criteria
 
@@ -36,6 +41,12 @@ Only if the calling prompt says the user approved mining for this round (the cal
 Run `bash scripts/check-template-version.sh` once per round (it is read-only). Relay its output verbatim in your summary. If it reports the engine is behind, name the `CHANGELOG.md` entries between the two versions so the reader knows what they'd be pulling — but **do not** run `git merge`, edit engine files to match, or bump `VERSION` yourself. Applying a template update is a separate, deliberate step the user drives.
 
 Run `bash scripts/check-orfaos.sh` once per round (read-only). For each file it lists (a file no `.md` links), add a link with a one-line description in the folder's own index (`README.md` or the category node), or in `MIND.md` for engine pieces; group repetitive series instead of one line per file. If a file is clearly junk (empty, accidental, duplicate), list it in your summary for deletion instead of linking it. Report what you linked.
+
+Run `bash scripts/check-tamanho.sh` once per round (read-only). For each node it lists, **propose** a split in your summary (which subtopics, which folder name) — never split it yourself, since a split is a reorganization and needs the user's yes. Task boards in `tarefas/` usually shrink below the limit after the done-items cleanup (see `docs/ARQUITETURA.md`'s cut criteria), so do that first and only propose a split for what's still over.
+
+**Knowledge vs. project:** per `docs/ARQUITETURA.md` section 5, production material (build files, `node_modules`, source HTML, renders, iterated deliverables, generation prompts) doesn't belong in the vault. If you find any inside it, list it in your summary with a suggested destination (the project's own repo next to the vault, plus a bridge node left in the Mind). **Report only — never move files out of the vault yourself.**
+
+**Move proposals:** anything that moves files — a project out to its own repo, binaries out to the Drive, a split, `git rm --cached` of a tracked binary — goes in your summary under "Propostas (esperam o sim)", one line per item with its destination and why. Never execute them. Identical files and repeated paragraphs from the sweep: dedupe text in nodes directly (keep the main source, link from the others); for duplicated binaries, only propose.
 
 ## Finishing a round
 

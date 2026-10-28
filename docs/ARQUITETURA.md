@@ -296,7 +296,7 @@ O repositório complementar não deve assumir um nome/caminho fixo pro vault pes
 
 ## 14. Persona espelho
 
-**Decisão:** o Claude mantém um perfil de **como o usuário fala e age** em `persona.md` (raiz do vault), lê esse perfil no início de toda conversa, em qualquer projeto, e o atualiza sozinho ao longo do uso. É opt-in, com níveis, escolhido numa pergunta do `config.md` (`desligado` / `voz` / `voz+comportamento` / `voz+comportamento+humor`).
+**Decisão:** o Claude mantém um perfil de **como o usuário fala e age** em `persona.md` (raiz do vault), lê esse perfil no início de toda conversa, em qualquer projeto, e o atualiza sozinho ao longo do uso. É opt-in, com níveis, escolhido numa pergunta do `config.md` (`desligado` / `voz` / `voz+comportamento` / `voz+comportamento+humor`, ou `comportamento`, que espelha só o comportamento, sem voz nem humor).
 
 **Por que cabe no Mind:** é o princípio da seção 7 — informação durável sobre o usuário e sobre *como o Claude deve interagir com ele* não pode ficar presa num sistema de memória interno, não versionado e invisível. O perfil é versionado no vault, editável à mão e cada mudança aparece (aviso de uma linha + diff no git).
 

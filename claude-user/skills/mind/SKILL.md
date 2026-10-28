@@ -63,6 +63,7 @@ Regras 6, 8–11 completas (exemplos, motivos, critérios de higiene) na seção
 - `voz` — só registro, expressões e estrutura das mensagens.
 - `voz+comportamento` — também como o usuário decide, pede, corrige e reage a erro/risco.
 - `voz+comportamento+humor` — também o tipo de humor; só espelha piada quando o usuário puxou, nunca por conta própria.
+- `comportamento` — só os padrões de comportamento, sem voz nem humor (fora da escada acima: é pra quem quer o Claude agindo do jeito dele, mas falando no tom padrão do `config.md`). O `persona.md` fica só com `## Comportamento e jeito de pensar` e `## O que NÃO espelhar`; traço de voz ou humor não é gravado.
 
 Se o usuário mudar o nível no `config.md`, atualize o `nivel:` do `persona.md` (se existir). Traços de um nível acima do atual não entram.
 
@@ -90,7 +91,7 @@ Perfil construído aos poucos, observando as conversas, pra o Claude conversar d
 _Mensagens reais curtas (5-10), sem dados de terceiros — referência de ritmo e tom, mais eficaz que descrição._
 
 ## Comportamento e jeito de pensar
-_Só a partir do nível `voz+comportamento`._
+_Nos níveis `comportamento`, `voz+comportamento` e `voz+comportamento+humor`._
 
 ## O que NÃO espelhar
 
@@ -101,7 +102,7 @@ _Só a partir do nível `voz+comportamento`._
 
 Cada traço é um bullet: descrição do padrão + exemplo literal curto entre aspas (quando houver) + `(inicial)`/`(firme)`.
 
-**Observar:** expressões recorrentes, abertura/fechamento de mensagem, jeito de pedir/corrigir/concordar/agradecer, estrutura (numeração, tamanho, emendar assuntos) e, a partir do nível `voz+comportamento`, padrões de comportamento (valida antes de liberar, separa análise de execução, trata CAPS como regra dura…). **Não vira traço:** fatos da vida do usuário (captura normal, com confirmação), humor momentâneo/emocional pontual, erros de digitação, dados de terceiros ou algo sensível nos exemplos.
+**Observar:** expressões recorrentes, abertura/fechamento de mensagem, jeito de pedir/corrigir/concordar/agradecer, estrutura (numeração, tamanho, emendar assuntos) e, nos níveis com comportamento, padrões de comportamento (valida antes de liberar, separa análise de execução, trata CAPS como regra dura…). **Não vira traço:** fatos da vida do usuário (captura normal, com confirmação), humor momentâneo/emocional pontual, erros de digitação, dados de terceiros ou algo sensível nos exemplos.
 
 **Gravar:**
 1. Junte as observações e grave numa pausa natural, nunca no meio do trabalho. Nunca `git add`/`commit`.

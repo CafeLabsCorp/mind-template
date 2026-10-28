@@ -48,6 +48,7 @@ Quer que o Claude aprenda aos poucos como você fala e age, e passe a conversar 
 - **voz** — só o jeito de falar (registro, expressões, estrutura das mensagens).
 - **voz+comportamento** — também como você decide, pede, corrige e reage a erro/risco.
 - **voz+comportamento+humor** — também o tipo de humor; só espelha piada quando você puxa.
+- **comportamento** — só como você decide, pede, corrige e reage a erro/risco (ex.: validar antes de liberar, separar ideia de execução, listas numeradas), **sem** espelhar o jeito de falar nem o humor: as respostas seguem o tom padrão deste arquivo.
 
 **Resposta:** (ainda não respondido)
 

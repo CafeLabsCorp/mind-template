@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Espelha os binários do vault (ou de um repo de projeto) no Drive, via rclone.
 # O GitHub só leva texto; binário fica no disco e tem cópia no Drive, na mesma árvore de pastas.
-# Quais extensões contam como binário vem das linhas "*.ext" do .gitignore da pasta (fonte única).
+# O que conta como binário vem do .gitignore da pasta (fonte única): as linhas "*.ext" e as
+# linhas com caminho que terminam em "/" ou "*.ext" (ex.: "marca/*/png/", "contratos/*.pdf").
 # Sempre "rclone copy" (nunca "sync"): nada é apagado de nenhum dos lados.
 #
 # Uso: scripts/drive-sync.sh push|pull [pasta-local] [remote:caminho] [--dry-run]
@@ -20,7 +21,7 @@ case "$MODE" in push|pull) ;; *) sed -n '2,11p' "$0"; exit 2 ;; esac
 command -v rclone >/dev/null || { echo "rclone não instalado (ver claude-user/CLAUDE.md, regra de binários)"; exit 1; }
 rclone listremotes | grep -qx "${REMOTE%%:*}:" || { echo "remote '${REMOTE%%:*}' não configurado: rode 'rclone config'"; exit 1; }
 
-# Extensões binárias do .gitignore da pasta; sem .gitignore, usa a do vault.
+# Padrões binários do .gitignore da pasta; sem .gitignore, usa a do vault.
 GI="$LOCAL/.gitignore"; [ -f "$GI" ] || GI="$(cd "$(dirname "$0")/.." && pwd)/.gitignore"
 # Regras do rclone em ordem: primeiro as pastas fora, depois cada extensão dentro, por fim todo o resto fora.
 FILTER=()
@@ -28,7 +29,12 @@ for d in .git node_modules .obsidian .trash .claude; do FILTER+=(--filter "- $d/
 n=0
 while read -r ext; do FILTER+=(--filter "+ *.$ext" --filter "+ *.${ext^^}"); n=$((n+1)); done \
   < <(grep -oE '^\*\.[A-Za-z0-9]+$' "$GI" | cut -c3- | sort -u)
-[ "$n" -gt 0 ] || { echo "nenhuma extensão '*.ext' em $GI"; exit 1; }
+# Caminhos (pasta "x/*/png/" ou arquivo "x/*.pdf"), ancorados na raiz como no .gitignore; node_modules e build ficam fora.
+while read -r pat; do
+  pat="/${pat#/}"; [[ "$pat" == */ ]] && pat="$pat**"
+  FILTER+=(--filter "+ $pat"); n=$((n+1))
+done < <(grep -E '^[^#!].*/' "$GI" | grep -E '(/|\*\.[A-Za-z0-9]+)$' | grep -vE '(^|/)(node_modules|build)/' | sort -u)
+[ "$n" -gt 0 ] || { echo "nenhum padrão binário ('*.ext' ou caminho) em $GI"; exit 1; }
 FILTER+=(--filter "- *")
 
 if [ "$MODE" = push ]; then SRC="$LOCAL"; DST="$REMOTE"; else SRC="$REMOTE"; DST="$LOCAL"; fi

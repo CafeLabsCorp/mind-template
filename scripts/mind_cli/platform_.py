@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 IS_WINDOWS = os.name == "nt"
+SYSTEM = "windows" if IS_WINDOWS else ("macos" if sys.platform == "darwin" else "linux")
 
 
 def claude_home() -> Path:
@@ -72,3 +73,8 @@ def run(cmd, **kw) -> subprocess.CompletedProcess:
     kw.setdefault("encoding", "utf-8")
     kw.setdefault("errors", "replace")
     return subprocess.run(cmd, **kw)
+
+
+def npx_command(args) -> list:
+    """Comando pra rodar um pacote via npx. No Windows nativo o npx é um .cmd, então precisa do `cmd /c`."""
+    return (["cmd", "/c", "npx"] if IS_WINDOWS else ["npx"]) + list(args)

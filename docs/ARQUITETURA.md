@@ -242,6 +242,13 @@ organizar conhecimento pessoal provavelmente nunca vai precisar dele.
 ~~Time de subagentes especializados para desenvolvimento~~ — resolvido via o
 complemento opcional [Café Labs Forge](https://github.com/CafeLabsCorp/forge), ver
 seção 9.
+- **Atualização guiada do engine (hook pós-pull, ideia de 2026-11-25; só desenhar e construir depois que o engine estiver consolidado):** hoje o `mind.py template` só avisa que a pessoa está atrás e nunca aplica nada. A ideia é fechar o ciclo: depois do `git pull`/merge do `upstream`, o Claude da pessoa lê as novidades, aplica as que são padrão e **confere se o vault dela já tem algo parecido**, propondo mesclar em vez de duplicar. Estrutura pensada:
+  1. **Gatilho:** o hook `SessionStart` que já existe compara o `VERSION` do engine com a **última versão aplicada** neste vault (registro local da pessoa, a decidir onde: `config.md` ou um arquivo em `docs/`). Se o engine é mais novo que o aplicado, injeta o aviso "o engine foi de vN pra vM; rode a adoção". Puxar o código (merge) e adotar a novidade (conteúdo da pessoa) são passos separados.
+  2. **Manifesto de adoção por versão:** cada versão no `CHANGELOG.md` ganha, por novidade, um bloco "Adoção" legível pelo Claude: o que é, **como reconhecer um equivalente no vault** (pasta, arquivo, regra, marcador, comando), e o que aplicar (esqueleto, pergunta nova no `config.md`, migração). Sem esse bloco a novidade não entra; é ele que deixa o passo 3 confiável. **Dá pra começar já:** escrever o bloco "Adoção" nas novidades novas (a v5 de tarefas é a primeira), mesmo antes do hook existir.
+  3. **Rotina do Claude, por novidade:** (a) procurar no vault da pessoa algo equivalente (ex.: um board de tarefas com outro formato, uma regra de commit parecida, uma pasta de entregas); (b) mostrar lado a lado "você já tem X; a novidade é Y"; (c) perguntar, por número: **adotar o padrão**, **mesclar** (juntar o dela com o novo), **manter o dela** ou **pular por agora**; (d) aplicar só o confirmado.
+  4. **Memória do que foi decidido:** registrar a versão aplicada e o que foi pulado ou mantido, pra não perguntar de novo na próxima sessão; "pular por agora" volta na manutenção semanal.
+  5. **Limites:** engenharia (scripts, hooks, `ARQUITETURA.md`) o merge já traz; o hook só mexe em **conteúdo da pessoa** (tarefas, regras, `config.md`) e sempre com pergunta. Nunca roda a adoção sem sim, nunca apaga o que a pessoa criou e roda em lote, uma vez por mudança de versão, pra não gastar token à toa.
+  **A decidir quando for construir:** onde guardar a versão aplicada, o formato exato do bloco "Adoção", como tratar conflito do merge no `CLAUDE.md` pessoal, opt-out, e a ordem com a rodada de manutenção (que já checa a versão do template).
 
 ---
 

@@ -16,6 +16,15 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
 
 **Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
 
+**Adoção** (lida pelo Claude na atualização guiada; formato em `docs/ARQUITETURA.md`, seção de roadmap):
+
+- **Novidade: sistema de tarefas (board com formato fixo + `mind.py tarefas`).**
+  - **Reconhecer equivalente:** existe `tarefas/` (ou outra pasta de pendências) com checkboxes `- [ ]`; marcadores de prioridade (🔴🟡🟢 ou outros), ideia, prazo ou dependência; ou um arquivo de convenção do board (`tarefas/tarefas.md`). Se o board já usa outros marcadores, **não trocar sozinho**: mostrar o mapa "o seu → o novo" e perguntar.
+  - **Aplicar (engenharia, o merge já trouxe):** o comando `tarefas`, o passo de tarefas na manutenção e a regra "propor o `[x]` com data" no `claude-user/CLAUDE.md`.
+  - **Aplicar (conteúdo da pessoa, sempre com pergunta):** (a) sem board: criar `tarefas/tarefas.md` e `tarefas/pessoal.md` do esqueleto; (b) com board: oferecer **adotar o formato** (linha curta com data, núcleo de marcadores), **mesclar** (manter os marcadores dela e acrescentar só o que falta, como `⏳` e `⛓`) ou **manter o dela**; (c) responder a pergunta "Áreas de tarefas" do `config.md` se ainda estiver `(ainda não respondido)`.
+  - **Depois de aplicar:** rodar `python scripts/mind.py tarefas check` e mostrar o resumo; não corrigir em massa, só apontar.
+  - **Não fazer:** reescrever tarefas existentes, apagar marcadores dela ou mexer em `tarefas/` sem o sim.
+
 ## v4 — 2026-11-24
 
 **Engine em Python, igual em Windows, Linux e macOS.** Os scripts `.sh` e o `.mjs` saem; entra um comando só, `python scripts/mind.py <comando>`.

@@ -132,6 +132,10 @@ def main(args) -> int:
         if d:
             print(f"- {p}: {d} feito(s), {a} aberto(s)")
 
+    section("Tarefas (formato do board)")
+    from . import tarefas
+    tarefas.report(root)
+
     section("README de pasta longo (índice que pode ter virado diário)")
     long = []
     for p in mds:

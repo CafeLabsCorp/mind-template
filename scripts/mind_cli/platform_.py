@@ -78,3 +78,55 @@ def run(cmd, **kw) -> subprocess.CompletedProcess:
 def npx_command(args) -> list:
     """Comando pra rodar um pacote via npx. No Windows nativo o npx é um .cmd, então precisa do `cmd /c`."""
     return (["cmd", "/c", "npx"] if IS_WINDOWS else ["npx"]) + list(args)
+
+
+def documents_dir() -> Path:
+    """Pasta Documentos do sistema (no Windows pode estar redirecionada, ex.: OneDrive)."""
+    if IS_WINDOWS:
+        try:
+            import ctypes
+            import uuid
+            from ctypes import byref, c_ubyte, c_ulong, c_ushort, c_wchar_p
+
+            class GUID(ctypes.Structure):
+                _fields_ = [("a", c_ulong), ("b", c_ushort), ("c", c_ushort), ("d", c_ubyte * 8)]
+
+            u = uuid.UUID("FDD39AD0-238F-46AF-ADB4-6C85480369C7")  # FOLDERID_Documents
+            g = GUID(u.time_low, u.time_mid, u.time_hi_version, (c_ubyte * 8)(*u.bytes[8:]))
+            ptr = c_wchar_p()
+            if ctypes.windll.shell32.SHGetKnownFolderPath(byref(g), 0, None, byref(ptr)) == 0:
+                path = ptr.value
+                ctypes.windll.ole32.CoTaskMemFree(ptr)
+                if path:
+                    return Path(path)
+        except Exception:
+            pass
+    elif sys.platform != "darwin":
+        r = run(["xdg-user-dir", "DOCUMENTS"])
+        if r.returncode == 0 and r.stdout.strip():
+            return Path(r.stdout.strip())
+    return Path.home() / "Documents"
+
+
+def pin_folder(path: Path) -> str:
+    """Fixa a pasta no acesso rápido do sistema. Devolve uma mensagem do que aconteceu."""
+    if IS_WINDOWS:
+        q = str(path).replace("'", "''")
+        r = run(["powershell", "-NoProfile", "-Command",
+                 f"(New-Object -ComObject shell.application).Namespace('{q}').Self.InvokeVerb('pintohome')"])
+        if r.returncode == 0:
+            return "Fixada no Acesso rápido do Explorer."
+        return "Não consegui fixar sozinho; no Explorer: clique direito na pasta > Fixar no Acesso rápido."
+    if sys.platform == "darwin":
+        return "No macOS: arraste a pasta pra barra lateral do Finder (ou Finder > Ir > Ir para a pasta)."
+    bm = Path.home() / ".config" / "gtk-3.0" / "bookmarks"
+    line = f"{path.as_uri()} {path.name}"
+    try:
+        bm.parent.mkdir(parents=True, exist_ok=True)
+        cur = bm.read_text(encoding="utf-8") if bm.is_file() else ""
+        if path.as_uri() not in cur:
+            sep = "" if (not cur or cur.endswith(chr(10))) else chr(10)
+            bm.write_text(cur + sep + line + chr(10), encoding="utf-8")
+        return "Adicionada aos favoritos do gerenciador de arquivos (GTK)."
+    except OSError:
+        return "Não consegui fixar sozinho; adicione a pasta aos favoritos do seu gerenciador de arquivos."

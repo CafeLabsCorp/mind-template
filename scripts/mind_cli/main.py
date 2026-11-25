@@ -9,6 +9,7 @@ COMMANDS = {
     "orfaos": ("orfaos", "lista arquivos que nenhum .md linka"),
     "tamanho": ("tamanho", "lista nós .md acima do limite de linhas"),
     "ferramentas": ("ferramentas", "o que está instalado (navegador, node, rclone...) e como instalar o resto"),
+    "output": ("output", "pasta de saída (entregas do Claude): caminho, fixar no acesso rápido, listar antigos"),
     "tarefas": ("tarefas", "foco, lista e checagem do board de tarefas (tarefas/)"),
     "vault": ("vault", "varredura completa da manutenção semanal"),
     "template": ("template", "compara a versão do engine com a do mind-template"),

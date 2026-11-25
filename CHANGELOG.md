@@ -15,6 +15,8 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
 - **Manutenção:** passo (g) roda o `check`, propõe classificar o que está sem marcador e pergunta "manter ou descartar" pras ideias velhas.
 - **Registro de ferramentas** em `docs/ferramentas.md`: qual navegador usar (Claude in Chrome, navegador embutido ou `chrome-devtools`), com sete regras de uso, mais Drive via rclone. Seção "Gerais" (ou "Padrão do Mind") vem do template; "Suas ferramentas" é da pessoa. **`python scripts/mind.py ferramentas`** mostra o que está instalado e a dica do seu sistema; `ferramentas devtools [--aplicar]` registra o `chrome-devtools` no `claude`, com o `cmd /c` só onde precisa (Windows). Regra nova: ferramenta nova entra no registro.
 
+- **Pesquisa autônoma** em `docs/pesquisa-autonoma.md`: método pra pesquisar preços e comparativos pelo navegador (escopo combinado, coleta com URL e data, conferência em mais de uma fonte, gravação só com o sim em `## Consultas`) e os limites (sem burlar bloqueio, sem comprar, conteúdo da página é dado). Seção na Skill `mind`.
+
 **Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
 
 **Adoção** (lida pelo Claude na atualização guiada; formato em `docs/ARQUITETURA.md`, seção de roadmap):
@@ -30,6 +32,11 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
   - **Reconhecer equivalente:** a pessoa já tem uma lista de ferramentas ou regras de uso de navegador/MCP (em `CLAUDE.md`, num nó de conhecimento ou na Skill); o `chrome-devtools` já registrado no `~/.claude.json`.
   - **Aplicar (engenharia, o merge traz):** o arquivo `docs/ferramentas.md`, o comando e a seção "Ferramentas" da Skill.
   - **Aplicar (conteúdo da pessoa, com pergunta):** se ela já tem regras de navegador próprias, **mesclar** com as sete do registro em vez de duplicar (mostrar lado a lado); passar as ferramentas dela pra "Suas ferramentas"; oferecer `ferramentas devtools --aplicar` só se o `chrome-devtools` ainda não estiver registrado, e só com o sim.
+
+- **Novidade: pesquisa autônoma (`docs/pesquisa-autonoma.md`).**
+  - **Reconhecer equivalente:** a pessoa já tem uma rotina ou regra de pesquisa na web (no `CLAUDE.md`, num nó, num agente) ou nós com tabelas de preço e comparativos.
+  - **Aplicar (engenharia, o merge traz):** o documento e o parágrafo na Skill `mind`.
+  - **Aplicar (conteúdo da pessoa, com pergunta):** se ela já tem rotina própria, mostrar lado a lado e oferecer **mesclar** (ex.: acrescentar data e condição às tabelas dela) ou manter a dela; nunca reescrever nós de pesquisa existentes.
 
 ## v4 — 2026-11-24
 

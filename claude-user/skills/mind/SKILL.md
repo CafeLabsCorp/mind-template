@@ -124,3 +124,5 @@ Se o usuário mencionar que quer desenvolver algo (um MVP, um app, uma ideia de 
 ## Ferramentas
 
 Quando precisar **escolher entre ferramentas** (qual navegador usar, WebFetch ou navegador, instalar um MCP ou CLI), leia `docs/ferramentas.md` antes de agir: lá estão pra que serve cada uma, quando preferir, como instalar nos três sistemas e as travas de segurança. Não carregue o arquivo à toa. Ferramenta nova que você passar a usar ou instalar entra lá (regra em `claude-user/CLAUDE.md`).
+
+**Pesquisa autônoma:** quando a pessoa pedir pra pesquisar ou comparar algo que exige abrir páginas (preço, disponibilidade, opções), siga `docs/pesquisa-autonoma.md`: combine o escopo, colete com fonte e data, confira em mais de uma fonte e só grave depois do sim, numa seção `## Consultas` do nó do assunto.

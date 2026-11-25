@@ -17,6 +17,6 @@ _Nenhum nó ainda — os primeiros surgem conforme você usa o Mind._
 ## Engine — como o próprio Mind funciona
 
 - [README](README.md) — apresentação do projeto · [Changelog](CHANGELOG.md) — versões do engine.
-- [Arquitetura](docs/ARQUITETURA.md) — como o Mind funciona e por quê · [Manutenção](docs/MANUTENCAO.md) — registro das rodadas periódicas. · [Ferramentas](docs/ferramentas.md) — navegadores, MCPs e CLIs que o Claude escolhe ou instala.
+- [Arquitetura](docs/ARQUITETURA.md) — como o Mind funciona e por quê · [Manutenção](docs/MANUTENCAO.md) — registro das rodadas periódicas. · [Ferramentas](docs/ferramentas.md) — navegadores, MCPs e CLIs que o Claude escolhe ou instala · [Pesquisa autônoma](docs/pesquisa-autonoma.md) — como o Claude pesquisa preços e comparativos pelo navegador e grava com fonte e data.
 - [CLAUDE.md global](claude-user/CLAUDE.md) — regras de trabalho e de captura · [Skill `mind`](claude-user/skills/mind/SKILL.md) — como ler e escrever no vault · [Agente `maintenance`](claude-user/agents/maintenance.md) — roda a manutenção periódica.
 - [Scripts](scripts/README.md) — utilitários locais.

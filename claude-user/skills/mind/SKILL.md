@@ -16,7 +16,7 @@ O vault vive na raiz deste repositório. Índice raiz: `MIND.md` (só links + 1 
 1. Leia `MIND.md`.
 2. Identifique o(s) nó(s) relevante(s) pra pergunta feita.
 3. Leia só esses arquivos — nunca a árvore inteira.
-   **Se o assunto não aparece como título no índice** (um nome de pessoa, bot, projeto, termo solto) **ou antes de dizer que não há informação**, rode `scripts/buscar.sh <termo>` (vault inteiro, conteúdo e nome de arquivo, sem custo; devolve só os arquivos que mais citam, com uma linha de contexto). O índice só mostra o que virou título; um nome citado de passagem numa linha ou num arquivo de trabalho só se acha assim. Nunca responda "não tenho essa informação" sem essa busca.
+   **Se o assunto não aparece como título no índice** (um nome de pessoa, bot, projeto, termo solto) **ou antes de dizer que não há informação**, rode `python scripts/mind.py buscar <termo>` (vault inteiro, conteúdo e nome de arquivo, sem custo; devolve só os arquivos que mais citam, com uma linha de contexto). O índice só mostra o que virou título; um nome citado de passagem numa linha ou num arquivo de trabalho só se acha assim. Nunca responda "não tenho essa informação" sem essa busca.
 4. Ao ler qualquer índice (o `MIND.md` raiz ou o índice de uma subpasta), aplique também a **regra de reagrupamento** abaixo — é uma checagem barata, o índice já foi lido de qualquer forma pra achar o nó certo.
 
 ## Modo captura (escrita — só depois de confirmação do usuário)
@@ -43,7 +43,7 @@ Acionado pelo gatilho em `~/.claude/CLAUDE.md` quando o usuário já confirmou q
    ---
    ```
    Tags livres, mas reaproveite as que já existirem em nós parecidos (checar via Grep) em vez de inventar sinônimo novo.
-8. **Tamanho/split (de cima pra baixo)**: nó acima de ~120-150 linhas, ou com dois assuntos distintos, vira pasta com índice próprio (`tema/tema.md` + subtópicos). `scripts/check-tamanho.sh` lista os que passaram.
+8. **Tamanho/split (de cima pra baixo)**: nó acima de ~120-150 linhas, ou com dois assuntos distintos, vira pasta com índice próprio (`tema/tema.md` + subtópicos). `python scripts/mind.py tamanho` lista os que passaram.
 9. **Reagrupamento (de baixo pra cima)**: se um nível do índice tem nós com tema comum ou ~6-8+ entradas soltas, falta uma pasta intermediária. **Nunca mova ou reorganize sozinho** — proponha (quais nós, nome da pasta, por quê) e só execute depois do sim, corrigindo os links relativos afetados. É checagem de estrutura do índice, não desculpa pra ler a árvore inteira.
 10. **Links "Ver também"**: ao criar ou editar um nó, ligue nos dois sentidos os nós com relação real — não trivia genérica ("mesma stack") e sem repetir o que já está em `Depende de`/`Consumido por`.
 11. **README de pasta é índice, não diário**: uma frase por arquivo; lição e decisão vão pro nó de contexto.
@@ -115,7 +115,7 @@ Cada traço é um bullet: descrição do padrão + exemplo literal curto entre a
 
 **Tamanho:** lido em toda conversa, então meta de ~40-60 linhas. Se passar, **não aplique split em pasta** (a persona precisa ser lida inteira) — funda traços parecidos e compacte exemplos. A manutenção periódica cuida disso.
 
-**Mineração de conversas antigas** (opt-in separado no `config.md`, ver `docs/ARQUITETURA.md`): **ao gravar a resposta `perguntar` ou `automático`, confira se `.claude/settings.json` tem `Bash(scripts/extract-user-messages.sh)` e `Bash(scripts/extract-user-messages.sh *)` em `permissions.allow` e adicione o que faltar (avisando numa linha) — sem isso o classificador de permissões bloqueia o script na primeira rodada.** feita na rodada de manutenção via `scripts/extract-user-messages.sh` (só mensagens do usuário, local). `minerado: AAAA-MM-DD` no frontmatter marca até quando já foi minerado. Ao receber "Amostras candidatas" do subagente, mostre-as ao usuário, pergunte quais manter e só então grave em `## Amostras` — literais nunca entram sem confirmação.
+**Mineração de conversas antigas** (opt-in separado no `config.md`, ver `docs/ARQUITETURA.md`): **ao gravar a resposta `perguntar` ou `automático`, confira se `.claude/settings.json` tem `Bash(python scripts/mind.py mensagens)` e `Bash(python scripts/mind.py mensagens *)` em `permissions.allow` e adicione o que faltar (avisando numa linha) — sem isso o classificador de permissões bloqueia o script na primeira rodada.** feita na rodada de manutenção via `python scripts/mind.py mensagens` (só mensagens do usuário, local). `minerado: AAAA-MM-DD` no frontmatter marca até quando já foi minerado. Ao receber "Amostras candidatas" do subagente, mostre-as ao usuário, pergunte quais manter e só então grave em `## Amostras` — literais nunca entram sem confirmação.
 
 ## Time de agentes de desenvolvimento (opcional, fora do Mind)
 

@@ -4,6 +4,19 @@ Versão da **base de engenharia** — Skill, `claude-user/`, `docs/ARQUITETURA.m
 
 A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) compara o `VERSION` local com o do `mind-template` e avisa quando você está atrás — ela nunca aplica update sozinha, só aponta e te ajuda a aplicar (`git merge upstream/main` se você usa o fluxo de dois remotes, ou à mão).
 
+## v4 — 2026-11-24
+
+**Engine em Python, igual em Windows, Linux e macOS.** Os scripts `.sh` e o `.mjs` saem; entra um comando só, `python scripts/mind.py <comando>`.
+
+- **`scripts/mind.py` + `scripts/mind_cli/`**: dez comandos (`status`, `buscar`, `vault`, `orfaos`, `tamanho`, `template`, `drive`, `mensagens`, `setup`...) com a mesma saída dos scripts antigos. Python é o padrão porque roda sem adaptação em qualquer sistema; bash não roda no Windows sem WSL.
+- **Hooks em exec form** no `.claude/settings.json`: `python` + `${CLAUDE_PROJECT_DIR}`, sem shell e sem caminho fixo. O arquivo ficou bem menor.
+- **`.gitattributes`** fixa as quebras de linha, pra o mesmo repo não aparecer todo modificado entre sistemas. Use `core.autocrlf=false`.
+- **`setup` multiplataforma**: cria os symlinks de `~/.claude` (`CLAUDE.md`, `mind-vault`, `skills/mind`, `agents/maintenance.md`). No Windows precisa do Modo Desenvolvedor ligado; sem ele o comando para e explica como ligar.
+- **`settings.local.json` fica no `.gitignore`.**
+- Docs, Skill e agente `maintenance` apontam pros comandos novos.
+
+**Nota de migração:** depois de puxar o update, apague os `.sh` antigos que sobrarem em `scripts/` e rode `python scripts/mind.py setup` de novo. Os hooks antigos em bash param de funcionar; use o `settings.json` novo.
+
 ## v3 — 2026-10-27
 
 **O Mind guarda conhecimento; produção vira repo próprio.** Regras novas em `docs/ARQUITETURA.md`, seção 5:

@@ -19,9 +19,9 @@ The full architecture (why each decision was made, what's still missing) is in [
 - **`persona.md`** (created on demand, never shipped): an optional "mirror persona" — a profile of how you talk and act, built gradually by Claude from your real conversations so it answers in your own style. Opt-in, with levels (off / voice / voice+behavior / +humor), chosen in `config.md`. It's personal content: it lives in your private repo. See [docs/ARQUITETURA.md](docs/ARQUITETURA.md), section 14.
 - **`.claude/`**: Skill and permissions that only apply while this project is active.
 - **`claude-user/`**: the "warehouse" for **user-level** Skill, Subagents, and instructions — they work in any active project, not just this one. They live here (versioned in this repo) and get mirrored into `~/.claude/` via symlink (see below).
-- **`scripts/setup-symlinks.sh`**: recreates the `claude-user/` symlinks in `~/.claude/`.
-- **`scripts/status-all.sh`**: scans whatever project repos you list inside it and shows which ones have uncommitted changes or unpushed commits — to check everything at once instead of going folder by folder.
-- **`scripts/check-template-version.sh`**: reports whether your engineering base is behind this template (read-only).
+- **`python scripts/mind.py setup`**: recreates the `claude-user/` symlinks in `~/.claude/`.
+- **`python scripts/mind.py status`**: scans whatever project repos you list inside it and shows which ones have uncommitted changes or unpushed commits — to check everything at once instead of going folder by folder.
+- **`python scripts/mind.py template`**: reports whether your engineering base is behind this template (read-only).
 - **`VERSION` / `CHANGELOG.md`**: version number of the engineering base and what changed in each bump — used by the check above and by the maintenance round.
 
 ## Setup on a new machine
@@ -61,13 +61,15 @@ breaks this flow (full reasoning in [docs/ARQUITETURA.md](docs/ARQUITETURA.md), 
 3. Run the setup and start using it:
 
    ```bash
-   ./scripts/setup-symlinks.sh
+   python scripts/mind.py setup
    claude
    ```
 
 You can clone it under any name and at any path — there's no fixed-location requirement, unless you're using a voice integration (see section below).
 
-Running `./scripts/setup-symlinks.sh` again is safe at any time (idempotent) — only needed when a new Skill/Subagent gets added under `claude-user/`.
+Running `python scripts/mind.py setup` again is safe at any time (idempotent) — only needed when a new Skill/Subagent gets added under `claude-user/`.
+
+**Requirements:** Python 3.8+ (no extra packages) and Git. The same commands run on Windows, Linux and macOS. On Windows, turn on Developer Mode once (Settings → System → For developers) so `setup` can create symlinks without admin rights; the command stops and tells you how if it's off. Set `git config --global core.autocrlf false` (a `.gitattributes` already pins text files to LF).
 
 From there it's just conversation: ask it to look something up, or mention something worth keeping — the Skill and the trigger handle the rest (see section below).
 
@@ -82,7 +84,7 @@ git merge upstream/main
 
 This usually merges without conflict because the architecture already separates "engineering" (`docs/`, `claude-user/`, `scripts/`, `.claude/`) — which only changes here, in the template — from personal content (your filled-in `MIND.md` and whatever node folders you create) — which the template never touches. The expected friction point is `.claude/settings.json`: it accumulates permissions granted as you use it, so if you and the template change that file at the same time you can get a merge conflict there — rare, and resolves by hand without mystery (small file). More details on this decision in [docs/ARQUITETURA.md](docs/ARQUITETURA.md), section 12.
 
-**Knowing when you're behind:** the engineering base has a version number in [`VERSION`](VERSION), and each bump is described in [`CHANGELOG.md`](CHANGELOG.md). The periodic maintenance round (section below) runs `scripts/check-template-version.sh`, which compares your local `VERSION` against the template's and tells you if you're behind — it only reports; the `git merge` above stays your call. The check needs no local copy of the template: it uses a sibling `../mind-template` if you keep one, otherwise `git fetch upstream`.
+**Knowing when you're behind:** the engineering base has a version number in [`VERSION`](VERSION), and each bump is described in [`CHANGELOG.md`](CHANGELOG.md). The periodic maintenance round (section below) runs `python scripts/mind.py template`, which compares your local `VERSION` against the template's and tells you if you're behind — it only reports; the `git merge` above stays your call. The check needs no local copy of the template: it uses a sibling `../mind-template` if you keep one, otherwise `git fetch upstream`.
 
 ## How knowledge capture works
 

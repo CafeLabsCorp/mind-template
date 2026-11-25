@@ -197,7 +197,22 @@ def cmd_lista(tasks, args):
 
 # ---------------------------------------------------------------- check
 
-def cmd_check(tasks, today, everything=False):
+def configured_areas(root: Path = ROOT):
+    """Áreas respondidas em config.md (pergunta "Áreas de tarefas"); vazio se ainda não respondida."""
+    cfg = root / "config.md"
+    if not cfg.is_file():
+        return []
+    m = re.search(r"^## Áreas de tarefas\s*\n(.*?)(?=^## |\Z)", read_text(cfg), re.M | re.S)
+    a = re.search(r"\*\*Resposta:\*\*\s*(.+)", m.group(1)) if m else None
+    if not a:
+        return []
+    val = re.sub(r"\(.*?\)", "", a.group(1)).replace("`", "").strip().rstrip(".")
+    if not val:
+        return []
+    return [x.strip().lower() for x in re.split(r"[,;]", val) if x.strip()]
+
+
+def cmd_check(tasks, today, everything=False, root: Path = ROOT):
     errors, warns = [], []
     open_ = [t for t in tasks if not t.done]
 
@@ -241,6 +256,9 @@ def cmd_check(tasks, today, everything=False):
     block(f"linha com mais de {MAX_LINE} caracteres (mover o detalhe pro nó e deixar o link)", long_,
           lambda t: f"{t.where} ({t.length}) {t.title}")
     block("📅 sem ^id", due_no_id, lambda t: f"{t.where} {t.title}")
+    for area in configured_areas(root):
+        if not ((root / "tarefas" / f"{area}.md").is_file() or (root / "tarefas" / area).is_dir()):
+            warns.append(f"área '{area}' (config.md) sem arquivo nem pasta em tarefas/ (o Claude cria na primeira tarefa)")
 
     print(f"# Tarefas: {len(open_)} abertas, {len(tasks) - len(open_)} feitas")
     print(f"  sem data de criação: {len(no_date)} (ideias sem data: {len(ideas_nodate)}; elas não envelhecem)")
@@ -261,7 +279,7 @@ def cmd_check(tasks, today, everything=False):
 
 def report(root: Path = ROOT):
     """Usado pela varredura do vault (vault.py): imprime o check sem derrubar o fluxo."""
-    cmd_check(load(root), date.today())
+    cmd_check(load(root), date.today(), root=root)
 
 
 def main(args) -> int:

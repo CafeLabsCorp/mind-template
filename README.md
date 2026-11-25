@@ -24,6 +24,10 @@ The full architecture (why each decision was made, what's still missing) is in [
 - **`python scripts/mind.py setup`**: recreates the `claude-user/` symlinks in `~/.claude/`.
 - **`python scripts/mind.py status`**: scans whatever project repos you list inside it and shows which ones have uncommitted changes or unpushed commits — to check everything at once instead of going folder by folder.
 - **`python scripts/mind.py template`**: reports whether your engineering base is behind this template (read-only).
+- **`python scripts/mind.py tarefas`**: reads your task board in `tarefas/` — `foco` (what to tackle now), `lista` (filters) and `check` (format problems). See [`tarefas/tarefas.md`](tarefas/tarefas.md).
+- **`python scripts/mind.py ferramentas`**: shows which tools (Node, rclone, ffmpeg, the DevTools browser MCP…) are installed on this machine and how to install the rest. The registry of tools and browser rules is [`docs/ferramentas.md`](docs/ferramentas.md).
+- **`python scripts/mind.py output`**: your output folder (outside the vault), where everything Claude generates for you lands by default. `--fixar` pins it to quick access.
+- **[`docs/pesquisa-autonoma.md`](docs/pesquisa-autonoma.md)**: how Claude researches prices and comparisons through the browser and records them with source and date.
 - **`VERSION` / `CHANGELOG.md`**: version number of the engineering base and what changed in each bump — used by the check above and by the maintenance round.
 
 ## Setup on a new machine

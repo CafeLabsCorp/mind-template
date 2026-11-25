@@ -60,7 +60,7 @@ Quer que a rodada de manutenção também analise suas conversas antigas com o C
 
 ## Áreas de tarefas
 
-Em quais áreas você quer separar suas tarefas? Cada área vira um arquivo (ou uma pasta, se crescer) em `tarefas/`. Exemplos: `pessoal`; `pessoal, trabalho`; `pessoal, trabalho, estudos`. Comece com poucas: dá pra criar outra depois.
+Em quais áreas você quer separar suas tarefas? Cada área vira um arquivo (ou uma pasta, se crescer) em `tarefas/`. Exemplos: `pessoal`; `pessoal, trabalho`; `pessoal, trabalho, estudos`. Comece com poucas: dá pra criar outra depois. Você não precisa criar os arquivos: o Claude cria o da área na primeira tarefa que você anotar nela.
 
 **Resposta:** (ainda não respondido)
 

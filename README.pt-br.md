@@ -24,6 +24,10 @@ A arquitetura completa (por que cada decisão foi tomada, o que ainda falta) est
 - **`python scripts/mind.py setup`**: recria os symlinks de `claude-user/` em `~/.claude/`.
 - **`python scripts/mind.py status`**: varre os repos de projeto que você listar dentro dele e mostra quais têm mudança não commitada ou commit não empurrado — pra checar tudo de uma vez em vez de entrar pasta por pasta.
 - **`python scripts/mind.py template`**: informa se a sua base de engenharia está atrás deste template (só leitura).
+- **`python scripts/mind.py tarefas`**: lê o seu board de tarefas em `tarefas/` — `foco` (o que atacar agora), `lista` (filtros) e `check` (problemas de formato). Ver [`tarefas/tarefas.md`](tarefas/tarefas.md).
+- **`python scripts/mind.py ferramentas`**: mostra quais ferramentas (Node, rclone, ffmpeg, o MCP de navegador DevTools…) estão instaladas nesta máquina e como instalar o resto. O registro de ferramentas e as regras de navegador estão em [`docs/ferramentas.md`](docs/ferramentas.md).
+- **`python scripts/mind.py output`**: a sua pasta de saída (fora do vault), onde cai por padrão tudo que o Claude gera pra você. `--fixar` fixa no acesso rápido.
+- **[`docs/pesquisa-autonoma.md`](docs/pesquisa-autonoma.md)**: como o Claude pesquisa preços e comparativos pelo navegador e grava com fonte e data.
 - **`VERSION` / `CHANGELOG.md`**: número de versão da base de engenharia e o que mudou em cada bump — usados pela checagem acima e pela rodada de manutenção.
 
 ## Setup numa máquina nova

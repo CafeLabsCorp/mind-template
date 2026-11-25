@@ -1,19 +1,24 @@
 ---
 tags: [engine, scripts]
 criado: 2026-10-20
-atualizado: 2026-10-20
+atualizado: 2026-11-24
 ---
 
 # Scripts do Mind
 
-Utilitários locais, rodados sob demanda (nenhum é daemon). Voltar ao [índice](../MIND.md).
+Utilitários locais, rodados sob demanda (nenhum é daemon), em Python 3 sem dependência externa, iguais em Windows, Linux e macOS. Um ponto de entrada só: `python scripts/mind.py <comando>` (no Linux sem o alias `python`, instalar `python-is-python3`). Decisões e motivo da troca do bash por Python em [migração pro Windows](../docs/migracao-windows.md). Voltar ao [índice](../MIND.md).
 
-- [status-all.sh](status-all.sh) — varre os repos git do array `REPOS` e mostra quais têm mudança não commitada ou commit não enviado.
-- [buscar.sh](buscar.sh) — busca um termo no vault inteiro (conteúdo e nome de arquivo, sem acento nem maiúscula) e devolve só os arquivos que mais citam, com uma linha de contexto; usar antes de dizer que o Mind não tem uma informação.
-- [check-orfaos.sh](check-orfaos.sh) — lista os arquivos do vault que nenhum `.md` linka (nós soltos no grafo do MindView); roda na [manutenção](../docs/ARQUITETURA.md).
-- [drive-sync.sh](drive-sync.sh) — espelha os binários no Drive via rclone (`push` disco→Drive, `pull` Drive→disco numa máquina nova); extensões tiradas do `.gitignore`, sempre `rclone copy`, nunca apaga nada.
-- [check-vault.sh](check-vault.sh) — varredura completa do vault na manutenção semanal: projetos dentro do vault, binários versionados/pesados, duplicados, boards, READMEs-diário, nós grandes e órfãos (só lê e reporta).
-- [check-tamanho.sh](check-tamanho.sh) — lista os nós `.md` acima do limite de linhas da regra de split (padrão 150); roda na manutenção, que só propõe o split.
-- [check-template-version.sh](check-template-version.sh) — avisa se o engine deste vault está atrás do `mind-template` (só leitura).
-- [setup-symlinks.sh](setup-symlinks.sh) — recria os symlinks de `claude-user/` em `~/.claude/` depois de um `git clone`.
-- [extract-user-messages.sh](extract-user-messages.sh) — extrai dos transcripts locais só as mensagens do usuário, matéria-prima da mineração da persona.
+- [mind.py](mind.py) — ponto de entrada; `python scripts/mind.py --help` lista os comandos.
+- [mind_cli/main.py](mind_cli/main.py) — despacha o comando pedido pro módulo certo; [mind_cli/__init__.py](mind_cli/__init__.py) marca o pacote.
+- [mind_cli/common.py](mind_cli/common.py) — raiz do vault, regra de pastas ignoradas, saída em UTF-8 e busca sem acento, usados por todos os comandos.
+- [mind_cli/platform_.py](mind_cli/platform_.py) — tudo que muda de sistema pra sistema (symlink, navegador, subprocesso); o único lugar com `if Windows`.
+- `status` ([status.py](mind_cli/status.py)) — varre os repos git irmãos e mostra quais têm mudança não commitada ou commit não enviado.
+- `buscar` ([buscar.py](mind_cli/buscar.py)) — busca um termo no vault inteiro (conteúdo e nome, sem acento nem maiúscula) e devolve só os arquivos que mais citam, com uma linha de contexto; usar antes de dizer que o Mind não tem uma informação.
+- `orfaos` ([orfaos.py](mind_cli/orfaos.py)) — lista os arquivos que nenhum `.md` linka (nós soltos no grafo do MindView); roda na [manutenção](../docs/ARQUITETURA.md#11-manutenção-periódica-do-vault).
+- `drive` ([drive.py](mind_cli/drive.py)) — espelha os binários no Drive via rclone (`push` disco→Drive, `pull` Drive→disco numa máquina nova); extensões tiradas do `.gitignore`, sempre `rclone copy`, nunca apaga nada.
+- `vault` ([vault.py](mind_cli/vault.py)) — varredura completa da manutenção semanal: projetos dentro do vault, binários versionados/pesados, duplicados, boards, READMEs-diário, nós grandes e órfãos (só lê e reporta).
+- `tamanho` ([tamanho.py](mind_cli/tamanho.py)) — lista os nós `.md` acima do limite de linhas da regra de split (padrão 150); a manutenção só propõe o split.
+- `template` ([template.py](mind_cli/template.py)) — avisa se o engine deste vault está atrás do `mind-template` (só leitura).
+- `setup` ([setup.py](mind_cli/setup.py)) — recria os symlinks de `claude-user/` em `~/.claude/` depois de um `git clone`; no Windows exige o Modo Desenvolvedor.
+- `mensagens` ([mensagens.py](mind_cli/mensagens.py)) — extrai dos transcripts locais só as mensagens do usuário, matéria-prima da mineração da [persona](../persona.md).
+- `hook` ([hooks.py](mind_cli/hooks.py)) — avisos do início de sessão do Claude Code (config pendente, manutenção vencida, link do vault ausente); chamado pelo `.claude/settings.json`.

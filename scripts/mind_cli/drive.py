@@ -5,6 +5,7 @@ O que conta como binário vem do .gitignore da pasta (fonte única): as linhas "
 com caminho que terminam em "/" ou "*.ext" (ex.: "marca/*/png/", "contratos/*.pdf").
 Pastas "out/" (vídeo/imagem renderizados, que se gera de novo a partir do código) nunca sobem.
 Sempre "rclone copy" (nunca "sync"): nada é apagado de nenhum dos lados.
+No pull entra "--immutable": o Drive nunca sobrescreve um arquivo local que já existe e difere.
 
 Uso: mind.py drive push|pull [pasta-local] [remote:caminho] [--dry-run]
   push  disco -> Drive (rodar depois de guardar arquivo novo)
@@ -73,4 +74,11 @@ def main(args) -> int:
     flt = build_filters(gi)
     src, dst = (str(local), remote) if mode == "push" else (remote, str(local))
     print(f"{mode}: {src} -> {dst}", flush=True)
-    return subprocess.call([rclone, "copy", src, dst, *flt, *dry, "--stats-one-line", "--stats", "10s", "-P"])
+    # No pull o Drive nunca sobrescreve um arquivo local que já existe e difere (--immutable);
+    # no push a versão nova do disco tem que atualizar o Drive, então ali não vale.
+    safe = ["--immutable"] if mode == "pull" else []
+    code = subprocess.call([rclone, "copy", src, dst, *flt, *safe, *dry, "--stats-one-line", "--stats", "10s", "-P"])
+    if code != 0 and mode == "pull":
+        print(chr(10) + "Se o rclone apontou arquivo que 'differs', ficou o seu local (o pull não sobrescreve). "
+              "Pra conferir o que mudou: mind.py drive push --dry-run.")
+    return code

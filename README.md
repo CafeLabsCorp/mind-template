@@ -2,6 +2,8 @@
 
 # Mind — template
 
+> **MIND** stands for **M**emory, **I**nsight & **N**etworked **D**ecisions. The project started under the full name and became just MIND for short.
+
 A personal knowledge base organized as a tree of Markdown files, meant to be edited visually in an [Obsidian](https://obsidian.md)-like editor and queried on demand by **[Claude Code](https://claude.com/claude-code)** — Anthropic's official CLI. This repository only really works alongside it: it's `claude` running in your terminal that reads the Skill and the capture trigger here, and decides when to look something up or save it. Without Claude Code installed, the vault is just a plain folder of Markdown.
 
 This repository is the **raw/template version**: only the engineering (Skill, capture trigger, symlink script, architecture docs), with no personal content. Clone it, personalize it, and start filling it with your own nodes.

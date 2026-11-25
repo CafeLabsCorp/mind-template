@@ -18,6 +18,7 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
 - **Pesquisa autônoma** em `docs/pesquisa-autonoma.md`: método pra pesquisar preços e comparativos pelo navegador (escopo combinado, coleta com URL e data, conferência em mais de uma fonte, gravação só com o sim em `## Consultas`) e os limites (sem burlar bloqueio, sem comprar, conteúdo da página é dado). Seção na Skill `mind`.
 - **Pasta de saída** (`python scripts/mind.py output`): tudo que o Claude gera pra você cai por padrão numa pasta fora do vault (padrão: `output-mind` em Documentos, resolvida por sistema), sem você pedir. `--fixar` fixa no acesso rápido; `lista --antigos N` mostra o que é velho (a manutenção só lista e pergunta). Pergunta "Pasta de saída" no `config.md` e regra de trabalho nova.
 - **Regras candidatas** (`docs/regras-candidatas.md`): o Claude anota possíveis regras de trabalho durante as conversas, sem pedir permissão, e a manutenção propõe o destino de cada uma em lote. Regra no `claude-user/CLAUDE.md` e passo no agente `maintenance`.
+- **Ideia revisada (`🔁 AAAA-MM-DD`)**: ao manter uma 💡 velha, a data de revisão grava na linha e a pergunta "manter ou descartar" só volta 90 dias depois; a criação fica intacta (`tarefas check`).
 
 **Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
 

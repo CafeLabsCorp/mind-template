@@ -25,6 +25,7 @@ ISO = r"(\d{4}-\d{2}-\d{2})"
 ID_END = re.compile(r"\^([a-z0-9][a-z0-9-]*)\s*$")
 DEPENDS = re.compile(r"⛓\s*depende de\s+\^([a-z0-9][a-z0-9-]*)")
 DUE = re.compile(r"📅\s*" + ISO)
+REVIEWED = re.compile(r"🔁\s*" + ISO)
 CREATED = re.compile(r"\(" + ISO + r"\)")
 ANY_DATE = re.compile(ISO)
 WAIT = re.compile(r"⏳\s*([^^⛓]*)")
@@ -38,7 +39,7 @@ SOON_DAYS = 7           # prazo que entra no foco
 
 class Task:
     __slots__ = ("file", "area", "line", "done", "text", "prio", "idea", "study", "wait",
-                 "due", "created", "id", "deps", "title", "length", "indent")
+                 "due", "created", "reviewed", "id", "deps", "title", "length", "indent")
 
     def __init__(self, file, area, line, done, text, indent=0):
         self.file, self.area, self.line, self.done, self.text = file, area, line, done, text
@@ -51,11 +52,13 @@ class Task:
         self.wait = (w.group(1).strip() or "(sem motivo)") if w else ""
         d = DUE.search(text)
         self.due = _date(d.group(1)) if d else None
+        r = REVIEWED.search(text)
+        self.reviewed = _date(r.group(1)) if r else None
         c = CREATED.search(text)
         if c:
             self.created = _date(c.group(1))
         else:
-            others = [m.group(1) for m in ANY_DATE.finditer(DUE.sub("", text))]
+            others = [m.group(1) for m in ANY_DATE.finditer(REVIEWED.sub("", DUE.sub("", text)))]
             self.created = _date(others[0]) if others else None
         m = ID_END.search(text)
         self.id = m.group(1) if m else ""
@@ -68,6 +71,11 @@ class Task:
     def action(self):
         """Ação de verdade: nem ideia, nem estudo, nem aguardando."""
         return not (self.idea or self.study or self.wait)
+
+    @property
+    def idea_since(self):
+        """Desde quando a ideia conta: a revisão mais recente (🔁) ou, sem ela, a criação."""
+        return max((d for d in (self.created, self.reviewed) if d), default=None)
 
     @property
     def where(self):
@@ -232,8 +240,8 @@ def cmd_check(tasks, today, everything=False, root: Path = ROOT):
     no_marker = [t for t in open_ if t.indent == 0 and not (t.prio or t.idea or t.study)]  # sub-item herda do pai
     stale_due = [t for t in open_ if t.due and t.due < today and not t.wait]
     ideas_old = sorted(
-        (t for t in open_ if t.idea and t.created and (today - t.created).days > IDEA_DAYS),
-        key=lambda t: t.created)
+        (t for t in open_ if t.idea and t.idea_since and (today - t.idea_since).days > IDEA_DAYS),
+        key=lambda t: t.idea_since)
     ideas_nodate = [t for t in open_ if t.idea and not t.created]
     long_ = sorted((t for t in open_ if t.length > MAX_LINE), key=lambda t: -t.length)
     due_no_id = [t for t in open_ if t.due and not t.id]
@@ -252,7 +260,7 @@ def cmd_check(tasks, today, everything=False, root: Path = ROOT):
     block("📅 vencidas e ainda abertas", stale_due, lambda t: f"{t.where} (venceu {t.due}) {t.title}")
     block("sem marcador (falta 🔴🟡🟢, 💡 ou 📚)", no_marker, lambda t: f"{t.where} {t.title}")
     block(f"💡 com mais de {IDEA_DAYS} dias (manter ou descartar?)", ideas_old,
-          lambda t: f"{t.where} ({t.created}) {t.title}")
+          lambda t: f"{t.where} ({t.idea_since}) {t.title}")
     block(f"linha com mais de {MAX_LINE} caracteres (mover o detalhe pro nó e deixar o link)", long_,
           lambda t: f"{t.where} ({t.length}) {t.title}")
     block("📅 sem ^id", due_no_id, lambda t: f"{t.where} {t.title}")

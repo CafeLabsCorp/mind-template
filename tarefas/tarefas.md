@@ -27,7 +27,7 @@ As áreas são as que você respondeu em [config.md](../config.md) (por padrão,
 O marcador vem logo depois do `- [ ]`:
 
 - 🔴 **alta**, 🟡 **média**, 🟢 **baixa**. Sem marcador: ainda não classificada (o `check` avisa).
-- 💡 **ideia**: nunca entra no foco; a manutenção pergunta "manter ou descartar" quando passa de 90 dias.
+- 💡 **ideia**: nunca entra no foco; a manutenção pergunta "manter ou descartar" quando passa de 90 dias. Se você mantém, o Claude grava `🔁 AAAA-MM-DD` (revisada) na linha e a pergunta só volta 90 dias depois; a data de criação fica intacta.
 - ⏳ **aguardando**: `⏳ aguardando o Pedro responder` no fim da linha (antes do `^id`). Sai do foco e aparece num bloco "aguardando"; tirar a marca devolve a tarefa ao foco.
 - 📅 `AAAA-MM-DD`: prazo de verdade. Entra no `foco` quando faltam 7 dias ou menos, e o `check` avisa se vencer.
 - **ID** ` ^area-nome` no fim da linha, só quando outra tarefa depende dela ou há prazo.

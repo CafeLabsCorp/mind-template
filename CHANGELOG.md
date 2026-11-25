@@ -4,7 +4,7 @@ Versão da **base de engenharia** — Skill, `claude-user/`, `docs/ARQUITETURA.m
 
 A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) compara o `VERSION` local com o do `mind-template` e avisa quando você está atrás — ela nunca aplica update sozinha, só aponta e te ajuda a aplicar (`git merge upstream/main` se você usa o fluxo de dois remotes, ou à mão).
 
-## v5 — em preparo (2026-11-25)
+## v5 — 2026-11-25
 
 **Sistema de tarefas.** O board de `tarefas/` ganha formato fixo e um comando que o lê.
 
@@ -17,6 +17,7 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
 
 - **Pesquisa autônoma** em `docs/pesquisa-autonoma.md`: método pra pesquisar preços e comparativos pelo navegador (escopo combinado, coleta com URL e data, conferência em mais de uma fonte, gravação só com o sim em `## Consultas`) e os limites (sem burlar bloqueio, sem comprar, conteúdo da página é dado). Seção na Skill `mind`.
 - **Pasta de saída** (`python scripts/mind.py output`): tudo que o Claude gera pra você cai por padrão numa pasta fora do vault (padrão: `output-mind` em Documentos, resolvida por sistema), sem você pedir. `--fixar` fixa no acesso rápido; `lista --antigos N` mostra o que é velho (a manutenção só lista e pergunta). Pergunta "Pasta de saída" no `config.md` e regra de trabalho nova.
+- **Regras candidatas** (`docs/regras-candidatas.md`): o Claude anota possíveis regras de trabalho durante as conversas, sem pedir permissão, e a manutenção propõe o destino de cada uma em lote. Regra no `claude-user/CLAUDE.md` e passo no agente `maintenance`.
 
 **Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
 
@@ -43,6 +44,11 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
   - **Reconhecer equivalente:** a pessoa já usa uma pasta fixa pra entregas ou exports (Documentos, Downloads, uma pasta de projeto) ou tem regra parecida no `CLAUDE.md`.
   - **Aplicar (engenharia, o merge traz):** o comando e a regra geral.
   - **Aplicar (conteúdo da pessoa, com pergunta):** responder a pergunta "Pasta de saída" do `config.md`; se ela já tem uma pasta de entregas, **apontar o `config.md` pra ela** em vez de criar outra; oferecer `output --fixar` só com o sim. Nunca mover nem apagar arquivos dela.
+
+- **Novidade: regras candidatas (`docs/regras-candidatas.md`).**
+  - **Reconhecer equivalente:** a pessoa já anota preferências ou regras soltas (num nó, no `CLAUDE.md`, num arquivo de lembretes).
+  - **Aplicar (engenharia, o merge traz):** o documento, a regra e o passo do agente de manutenção.
+  - **Aplicar (conteúdo da pessoa, com pergunta):** se ela já tem uma lista de regras soltas, oferecer **migrar** pra fila (uma linha por candidata) ou manter onde está; nunca apagar o que ela escreveu.
 
 ## v4 — 2026-11-24
 

@@ -64,6 +64,12 @@ Em quais áreas você quer separar suas tarefas? Cada área vira um arquivo (ou 
 
 **Resposta:** (ainda não respondido)
 
+## Pasta de saída
+
+Onde o Claude deve guardar tudo que gera pra você ver ou usar (imagens, vídeos, logos, PDFs, renders)? A pasta fica **fora do vault**, então não vai pro git nem pro Drive. Responda `(padrão)` pra usar `output-mind` dentro da pasta Documentos do sistema (funciona em Windows, Linux e macOS), ou informe outro caminho. `python scripts/mind.py output` mostra o caminho e cria a pasta; `--fixar` fixa no acesso rápido.
+
+**Resposta:** (ainda não respondido)
+
 ## Ver também
 
 - [MIND.md](MIND.md)

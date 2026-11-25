@@ -16,6 +16,7 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
 - **Registro de ferramentas** em `docs/ferramentas.md`: qual navegador usar (Claude in Chrome, navegador embutido ou `chrome-devtools`), com sete regras de uso, mais Drive via rclone. Seção "Gerais" (ou "Padrão do Mind") vem do template; "Suas ferramentas" é da pessoa. **`python scripts/mind.py ferramentas`** mostra o que está instalado e a dica do seu sistema; `ferramentas devtools [--aplicar]` registra o `chrome-devtools` no `claude`, com o `cmd /c` só onde precisa (Windows). Regra nova: ferramenta nova entra no registro.
 
 - **Pesquisa autônoma** em `docs/pesquisa-autonoma.md`: método pra pesquisar preços e comparativos pelo navegador (escopo combinado, coleta com URL e data, conferência em mais de uma fonte, gravação só com o sim em `## Consultas`) e os limites (sem burlar bloqueio, sem comprar, conteúdo da página é dado). Seção na Skill `mind`.
+- **Pasta de saída** (`python scripts/mind.py output`): tudo que o Claude gera pra você cai por padrão numa pasta fora do vault (padrão: `output-mind` em Documentos, resolvida por sistema), sem você pedir. `--fixar` fixa no acesso rápido; `lista --antigos N` mostra o que é velho (a manutenção só lista e pergunta). Pergunta "Pasta de saída" no `config.md` e regra de trabalho nova.
 
 **Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
 
@@ -37,6 +38,11 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
   - **Reconhecer equivalente:** a pessoa já tem uma rotina ou regra de pesquisa na web (no `CLAUDE.md`, num nó, num agente) ou nós com tabelas de preço e comparativos.
   - **Aplicar (engenharia, o merge traz):** o documento e o parágrafo na Skill `mind`.
   - **Aplicar (conteúdo da pessoa, com pergunta):** se ela já tem rotina própria, mostrar lado a lado e oferecer **mesclar** (ex.: acrescentar data e condição às tabelas dela) ou manter a dela; nunca reescrever nós de pesquisa existentes.
+
+- **Novidade: pasta de saída (`mind.py output`).**
+  - **Reconhecer equivalente:** a pessoa já usa uma pasta fixa pra entregas ou exports (Documentos, Downloads, uma pasta de projeto) ou tem regra parecida no `CLAUDE.md`.
+  - **Aplicar (engenharia, o merge traz):** o comando e a regra geral.
+  - **Aplicar (conteúdo da pessoa, com pergunta):** responder a pergunta "Pasta de saída" do `config.md`; se ela já tem uma pasta de entregas, **apontar o `config.md` pra ela** em vez de criar outra; oferecer `output --fixar` só com o sim. Nunca mover nem apagar arquivos dela.
 
 ## v4 — 2026-11-24
 

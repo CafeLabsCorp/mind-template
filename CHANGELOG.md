@@ -4,6 +4,18 @@ Versão da **base de engenharia** — Skill, `claude-user/`, `docs/ARQUITETURA.m
 
 A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) compara o `VERSION` local com o do `mind-template` e avisa quando você está atrás — ela nunca aplica update sozinha, só aponta e te ajuda a aplicar (`git merge upstream/main` se você usa o fluxo de dois remotes, ou à mão).
 
+## v5 — em preparo (2026-11-25)
+
+**Sistema de tarefas.** O board de `tarefas/` ganha formato fixo e um comando que o lê.
+
+- **`python scripts/mind.py tarefas`** com `foco` (o que atacar agora), `lista` (filtros) e `check` (ID duplicado, dependência quebrada, sem marcador, linha longa, prazo vencido, ideia com mais de 90 dias). O `check` também roda dentro de `mind.py vault`.
+- **Convenção de marcadores** no `docs/ARQUITETURA.md` (seção 5) e em `tarefas/tarefas.md`: núcleo 🔴🟡🟢, 💡, ⏳, 📅, `^id`, `⛓`; extensão opcional 📚. Linha canônica curta, com data de criação e link pro nó com o detalhe. Marcadores de contexto (celular/notebook, tempo) descartados.
+- **Regra de trabalho nova:** propor o `[x]` com data quando a tarefa foi cumprida.
+- **Template:** esqueleto `tarefas/tarefas.md` + `tarefas/pessoal.md`, pergunta "Áreas de tarefas" no `config.md`.
+- **Manutenção:** passo (g) roda o `check`, propõe classificar o que está sem marcador e pergunta "manter ou descartar" pras ideias velhas.
+
+**Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
+
 ## v4 — 2026-11-24
 
 **Engine em Python, igual em Windows, Linux e macOS.** Os scripts `.sh` e o `.mjs` saem; entra um comando só, `python scripts/mind.py <comando>`.

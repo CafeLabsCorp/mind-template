@@ -58,6 +58,12 @@ Quer que a rodada de manutenção também analise suas conversas antigas com o C
 
 **Resposta:** (ainda não respondido)
 
+## Áreas de tarefas
+
+Em quais áreas você quer separar suas tarefas? Cada área vira um arquivo (ou uma pasta, se crescer) em `tarefas/`. Exemplos: `pessoal`; `pessoal, trabalho`; `pessoal, trabalho, estudos`. Comece com poucas: dá pra criar outra depois.
+
+**Resposta:** (ainda não respondido)
+
 ## Ver também
 
 - [MIND.md](MIND.md)

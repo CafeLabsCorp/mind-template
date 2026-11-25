@@ -10,6 +10,10 @@ Configuração inicial de funcionamento (idioma, como chamar o usuário, fuso ho
 
 _Nenhum nó ainda — os primeiros surgem conforme você usa o Mind._
 
+## Tarefas
+
+- [Tarefas](tarefas/tarefas.md) — convenção do board (marcadores, linha canônica, comandos) · [Pessoal](tarefas/pessoal.md) — suas tarefas pessoais.
+
 ## Engine — como o próprio Mind funciona
 
 - [README](README.md) — apresentação do projeto · [Changelog](CHANGELOG.md) — versões do engine.

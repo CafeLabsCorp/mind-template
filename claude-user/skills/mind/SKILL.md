@@ -120,3 +120,7 @@ Cada traço é um bullet: descrição do padrão + exemplo literal curto entre a
 ## Time de agentes de desenvolvimento (opcional, fora do Mind)
 
 Se o usuário mencionar que quer desenvolver algo (um MVP, um app, uma ideia de produto nova) e o time de agentes do [Café Labs Forge](https://github.com/CafeLabsCorp/forge) ainda não estiver configurado nesta máquina, pode mencionar essa opção — sem insistir, só como algo disponível. Não é parte do Mind (vive em repositório próprio, com seu próprio script de symlink pra `~/.claude/agents/`), então não interfere em nada do modo leitura/captura acima. Ver `docs/ARQUITETURA.md`, seção 9.
+
+## Ferramentas
+
+Quando precisar **escolher entre ferramentas** (qual navegador usar, WebFetch ou navegador, instalar um MCP ou CLI), leia `docs/ferramentas.md` antes de agir: lá estão pra que serve cada uma, quando preferir, como instalar nos três sistemas e as travas de segurança. Não carregue o arquivo à toa. Ferramenta nova que você passar a usar ou instalar entra lá (regra em `claude-user/CLAUDE.md`).

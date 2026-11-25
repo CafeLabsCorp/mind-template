@@ -13,6 +13,7 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
 - **Regra de trabalho nova:** propor o `[x]` com data quando a tarefa foi cumprida.
 - **Template:** esqueleto `tarefas/tarefas.md` + `tarefas/pessoal.md`, pergunta "Áreas de tarefas" no `config.md`.
 - **Manutenção:** passo (g) roda o `check`, propõe classificar o que está sem marcador e pergunta "manter ou descartar" pras ideias velhas.
+- **Registro de ferramentas** em `docs/ferramentas.md`: qual navegador usar (Claude in Chrome, navegador embutido ou `chrome-devtools`), com sete regras de uso, mais Drive via rclone. Seção "Gerais" (ou "Padrão do Mind") vem do template; "Suas ferramentas" é da pessoa. **`python scripts/mind.py ferramentas`** mostra o que está instalado e a dica do seu sistema; `ferramentas devtools [--aplicar]` registra o `chrome-devtools` no `claude`, com o `cmd /c` só onde precisa (Windows). Regra nova: ferramenta nova entra no registro.
 
 **Nota de migração:** puxar o update traz o comando e a convenção; nada muda nas suas tarefas até você rodar `python scripts/mind.py tarefas check` e ajustar o que ele apontar. Não há migração automática.
 
@@ -24,6 +25,11 @@ A rodada de **manutenção periódica** (ver `docs/ARQUITETURA.md`, seção 11) 
   - **Aplicar (conteúdo da pessoa, sempre com pergunta):** (a) sem board: criar `tarefas/tarefas.md` e `tarefas/pessoal.md` do esqueleto; (b) com board: oferecer **adotar o formato** (linha curta com data, núcleo de marcadores), **mesclar** (manter os marcadores dela e acrescentar só o que falta, como `⏳` e `⛓`) ou **manter o dela**; (c) responder a pergunta "Áreas de tarefas" do `config.md` se ainda estiver `(ainda não respondido)`.
   - **Depois de aplicar:** rodar `python scripts/mind.py tarefas check` e mostrar o resumo; não corrigir em massa, só apontar.
   - **Não fazer:** reescrever tarefas existentes, apagar marcadores dela ou mexer em `tarefas/` sem o sim.
+
+- **Novidade: registro de ferramentas (`docs/ferramentas.md`) e `mind.py ferramentas`.**
+  - **Reconhecer equivalente:** a pessoa já tem uma lista de ferramentas ou regras de uso de navegador/MCP (em `CLAUDE.md`, num nó de conhecimento ou na Skill); o `chrome-devtools` já registrado no `~/.claude.json`.
+  - **Aplicar (engenharia, o merge traz):** o arquivo `docs/ferramentas.md`, o comando e a seção "Ferramentas" da Skill.
+  - **Aplicar (conteúdo da pessoa, com pergunta):** se ela já tem regras de navegador próprias, **mesclar** com as sete do registro em vez de duplicar (mostrar lado a lado); passar as ferramentas dela pra "Suas ferramentas"; oferecer `ferramentas devtools --aplicar` só se o `chrome-devtools` ainda não estiver registrado, e só com o sim.
 
 ## v4 — 2026-11-24
 
